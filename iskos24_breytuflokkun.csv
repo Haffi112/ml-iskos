@@ -15,7 +15,7 @@ area,,1 – Félagsleg staða,0 - Drop,,,
 urban,,1 – Félagsleg staða,0 - Drop,,,
 gender,Kyn svaranda (karl/kona/kvár),1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
 yob,Fæðingarár svaranda,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
-age,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+age,Aldur svaranda,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
 polintr,Áhugi á stjórnmálum,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS OG CSES,TRUE,TRUE
 pltrust,Traust til stjórnmálafólks,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS,TRUE,FALSE
 mimptask_24_10,,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,,,
@@ -159,7 +159,7 @@ emplstatus,,1 – Félagsleg staða,1 – Félagsleg staða,,,
 mainjobflo,,1 – Félagsleg staða,1 – Félagsleg staða,,,
 uniwindw,Launþegi eða sjálfstæður atvinnurekandi,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
 govpriv,Starfar hjá hinu opinbera eða einkarekstri,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
-educationflo,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+educationflo,Menntun svaranda (flokkuð),1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
 unmmb,Meðlimur í stéttafélagi,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
 maritals,Hjúskaparstaða,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
 manadartekjur,,1 – Félagsleg staða,1 – Félagsleg staða,,,

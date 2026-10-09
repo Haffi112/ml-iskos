@@ -134,7 +134,9 @@ NOMINAL <- c(
   "bprthealth", "bprtenvir", "bprtregpol", "bprtedu", "bprtequal",
   "bprthouse",
   # Employment-type questions: codes are sector/arrangement labels, not magnitudes.
-  "govpriv", "uniwindw"
+  "govpriv", "uniwindw",
+  # Education: parallel tracks (e.g. vocational vs. academic) and "Annað" have no single order.
+  "educationflo"
 )
 
 dtype_for <- function(v) if (v %in% NOMINAL) "nominal" else "ordinal"

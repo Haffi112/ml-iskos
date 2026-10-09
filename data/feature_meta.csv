@@ -1,8 +1,9 @@
 short_name,label,short_label,group,dtype
 elecdist,Kjördæmi,Kjördæmi,1 – Félagsleg staða,nominal
-gender,Kyn svaranda (karl/kona/kvár),Kyn svaranda,1 – Félagsleg staða,nominal
+gender,Kyn svaranda (karl/kona/kvár),Kyn,1 – Félagsleg staða,nominal
+age,Aldur svaranda,Aldur,1 – Félagsleg staða,ordinal
 polintr,Áhugi á stjórnmálum,Stjórnmálaáhugi,6 - Viðhorf og hegðun,ordinal
-pltrust,Traust til stjórnmálafólks,,6 - Viðhorf og hegðun,ordinal
+pltrust,Traust til stjórnmálafólks,Traust til stjórnmálafólks,6 - Viðhorf og hegðun,ordinal
 mipmtaskprt,Bestur flokkur til að leysa mikilvægasta verkefni,,4 – Málefnaeign,nominal
 medtime,Tími varið í fréttir í kosningabaráttunni,Tími í kosningafréttir,7 - Miðlar,ordinal
 medium,Miðill notaður mest til frétta,Helsti fréttamiðill,7 - Miðlar,nominal
@@ -14,19 +15,19 @@ ecobettwors_1,Efnahagsástand á Íslandi síðustu 12 mánuði,Mat á efnahags�
 EUmship,Æskilegt að Ísland gangi í ESB,Afstaða til ESB,2 – Málefnaviðhorf,ordinal
 envirimp,Umhverfisaðgerðir á móti atvinnusköpun,Umhverfi vs. atvinna,2 – Málefnaviðhorf,ordinal
 gincdif,Ríkið eigi að jafna dreifingu tekna,Tekjujöfnun ríkisins,2 – Málefnaviðhorf,ordinal
-taxreduc,Skatta ætti að minnka þrátt fyrir niðurskurð,,2 – Málefnaviðhorf,ordinal
-capicntry,Draga úr viðgangi höfuðborgar til að auka velmegun á landsbyggð,,2 – Málefnaviðhorf,ordinal
-ceqvote,Öll atkvæði eigi að gilda jafnt við úthlutun þingsæta,,2 – Málefnaviðhorf,ordinal
-privhealth,Stefnt að auknum einkarekstri í heilbrigðisþjónustu,Einkarekstur í heilsu,2 – Málefnaviðhorf,ordinal
+taxreduc,Skatta ætti að minnka þrátt fyrir niðurskurð,Skattalækkun,2 – Málefnaviðhorf,ordinal
+capicntry,Draga úr viðgangi höfuðborgar til að auka velmegun á landsbyggð,Landsbyggð og höfuðborg,2 – Málefnaviðhorf,ordinal
+ceqvote,Öll atkvæði eigi að gilda jafnt við úthlutun þingsæta,Jafnt vægi atkvæða,2 – Málefnaviðhorf,ordinal
+privhealth,Stefnt að auknum einkarekstri í heilbrigðisþjónustu,Einkarekstur í heilbrigðiskerfi,2 – Málefnaviðhorf,ordinal
 imueclt,Innflytjendur séu ógn við þjóðareinkenni,Innflytjendur og þjóðerni,2 – Málefnaviðhorf,ordinal
-essfull,EES-samningurinn ógnar fullveldi Íslands,,2 – Málefnaviðhorf,ordinal
+essfull,EES-samningurinn ógnar fullveldi Íslands,EES og fullveldi,2 – Málefnaviðhorf,ordinal
 femfight,Barátta femínista gegn kynbundnu ofbeldi gengið of langt,Femínismi of langt genginn,2 – Málefnaviðhorf,ordinal
-banks,Viðskiptabankar eigi að vera í einkaeigu,,2 – Málefnaviðhorf,ordinal
-immrght,Innflytjendur eigi jafnan rétt til félagslegs húsnæðis,,2 – Málefnaviðhorf,ordinal
-genconsind,Ríkisstjórn eigi að leggja áherslu á orkufrek? stóriðju,,2 – Málefnaviðhorf,ordinal
+banks,Viðskiptabankar eigi að vera í einkaeigu,Bankar í einkaeigu,2 – Málefnaviðhorf,ordinal
+immrght,Innflytjendur eigi jafnan rétt til félagslegs húsnæðis,Réttindi innflytjenda,2 – Málefnaviðhorf,ordinal
+genconsind,Ríkisstjórn eigi að leggja áherslu á orkufrek? stóriðju,Orkufrekur iðnaður,2 – Málefnaviðhorf,ordinal
 acrproimp,Rýmka innflutning á landbúnaðarafurðum,Innflutningur landbúnaðar,2 – Málefnaviðhorf,ordinal
-drugpol,Afglæpavæðing neysluskammta fíkniefna,,2 – Málefnaviðhorf,ordinal
-gndequ,Jafnrétti kynja gengið of langt,,2 – Málefnaviðhorf,ordinal
+drugpol,Afglæpavæðing neysluskammta fíkniefna,Afglæpavæðing fíkniefna,2 – Málefnaviðhorf,ordinal
+gndequ,Jafnrétti kynja gengið of langt,Jafnrétti of langt gengið,2 – Málefnaviðhorf,ordinal
 prtfeel_FF,Líkar við Flokk fólksins (0–10),,5 – Flokkshollusta og leiðtogar,ordinal
 prtfeel_B,Líkar við Framsóknarflokkinn (0–10),,5 – Flokkshollusta og leiðtogar,ordinal
 prtfeel_M,Líkar við Miðflokkinn (0–10),,5 – Flokkshollusta og leiðtogar,ordinal
@@ -38,10 +39,10 @@ prtfeel_V,Líkar við Vinstri-græn (0–10),,5 – Flokkshollusta og leiðtogar
 prtfeel_J,Líkar við Sósialistaflokkinn (0–10),,5 – Flokkshollusta og leiðtogar,ordinal
 lrscale,Eigin staðsetning á vinstri-hægri kvarða,Vinstri-hægri staða,8 - Hægri/Vinstri,ordinal
 democr,Ánægja með lýðræðið á Íslandi,Ánægja með lýðræðið,6 - Viðhorf og hegðun,ordinal
-civicvote,Kjósa er samfélagsleg skylda eða frjálst val,,6 - Viðhorf og hegðun,ordinal
-pltscrp,Útbreiðsla spillingar meðal stjórnmálamanna,,6 - Viðhorf og hegðun,ordinal
-mmbprt,Meðlimur í stjórnmálaflokki,,6 - Viðhorf og hegðun,ordinal
-hldecvote,Hvenær var endanleg ákvörðun um flokksval tekin,,6 - Viðhorf og hegðun,ordinal
+civicvote,Kjósa er samfélagsleg skylda eða frjálst val,Kosningar: skylda eða val,6 - Viðhorf og hegðun,ordinal
+pltscrp,Útbreiðsla spillingar meðal stjórnmálamanna,Spilling stjórnmálamanna,6 - Viðhorf og hegðun,ordinal
+mmbprt,Meðlimur í stjórnmálaflokki,Flokksaðild,6 - Viðhorf og hegðun,ordinal
+hldecvote,Hvenær var endanleg ákvörðun um flokksval tekin,Tímasetning ákvörðunar,6 - Viðhorf og hegðun,ordinal
 bprteco,Bestur flokkur í efnahagsmálum,,4 – Málefnaeign,nominal
 bprtimm,Bestur flokkur í innflytjendamálum,,4 – Málefnaeign,nominal
 bprteurope,Bestur flokkur í Evrópumálum,,4 – Málefnaeign,nominal
@@ -54,9 +55,10 @@ bprtedu,Bestur flokkur í menntamálum,,4 – Málefnaeign,nominal
 bprtequal,Bestur flokkur í jafnréttismálum,,4 – Málefnaeign,nominal
 bprthouse,Bestur flokkur í húsnæðismálum,,4 – Málefnaeign,nominal
 rentown,"Búseta í eigin húsnæði, leigu eða annars",Húsnæðisform,1 – Félagsleg staða,nominal
-uniwindw,Launþegi eða sjálfstæður atvinnurekandi,,1 – Félagsleg staða,nominal
-govpriv,Starfar hjá hinu opinbera eða einkarekstri,,1 – Félagsleg staða,nominal
-unmmb,Meðlimur í stéttafélagi,,1 – Félagsleg staða,ordinal
+uniwindw,Launþegi eða sjálfstæður atvinnurekandi,Launþegi eða sjálfstæður,1 – Félagsleg staða,nominal
+govpriv,Starfar hjá hinu opinbera eða einkarekstri,Opinber eða einkageiri,1 – Félagsleg staða,nominal
+educationflo,Menntun svaranda (flokkuð),Menntun,1 – Félagsleg staða,nominal
+unmmb,Meðlimur í stéttafélagi,Stéttarfélagsaðild,1 – Félagsleg staða,ordinal
 maritals,Hjúskaparstaða,Hjúskaparstaða,1 – Félagsleg staða,nominal
 hhmmb,Fjöldi heimilismanna,Fjöldi á heimili,1 – Félagsleg staða,ordinal
 childs,Fjöldi barna 17 ára og yngri á heimilinu,Fjöldi barna á heimili,1 – Félagsleg staða,ordinal

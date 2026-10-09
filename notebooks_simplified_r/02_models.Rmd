@@ -31,6 +31,7 @@ library(ggplot2)
 library(rpart)
 library(rpart.plot)
 library(randomForest)
+library(patchwork)
 
 # ÍSKOS litir + þema á einum stað (sjá iskos_style.R) — sami stíll og rsetup.R.
 source("iskos_style.R")
@@ -50,18 +51,26 @@ cat(nrow(df), "svarendur ·", ncol(df) - 1, "breytur\n")
 
 Hópur **4 (Málefnaeign)** og hópur **5 (Flokkshollusta og leiðtogar)** spyrja í raun *„hver er flokkurinn þinn?"* með óbeinum hætti — t.d. *„hvaða flokkur er bestur í efnahagsmálum?"* eða *„hversu vel líkar þér við Sjálfstæðisflokkinn (0–10)?"*. Ef við setjum þessar breytur inn í líkanið mun nákvæmnin hækka — en það er **leakage**, ekki forspá.
 
-**Prufaðu sjálf(ur):** breyttu `LEAK_GROUPS` í tóma vektorinn `character(0)` og keyrðu vinnubókina aftur. Nákvæmni slembiskógarins ætti að hoppa upp í 80–90% — það er gervihækkun sem byggir á eiginleikum sem eru of nálægt markmiðinu.
+Sama gildir að hluta um **mat á frammistöðu ríkisstjórnarinnar** (`govprfm`). Ríkisstjórnin 2021–2024 var skipuð VG, Sjálfstæðisflokki og Framsóknarflokki, svo spurningin *„hversu vel stóð ríkisstjórnin sig?"* er nátengd því hvort svarandi kaus stjórnarflokk. Við sleppum henni því líka, eins og gert er í kaflanum í bókinni.
+
+**Prufaðu sjálf(ur):** breyttu `LEAK_GROUPS` og/eða `EXCLUDE_VARS` í tóma vektorinn `character(0)` og keyrðu vinnubókina aftur. Nákvæmni slembiskógarins hækkar verulega þegar leakage-hóparnir eru teknir með — það er gervihækkun sem byggir á eiginleikum sem eru of nálægt markmiðinu.
 
 ```{r drop-leakage}
 LEAK_GROUPS <- c("4 – Málefnaeign", "5 – Flokkshollusta og leiðtogar")
 # LEAK_GROUPS <- character(0)   # ← uncomment to include leakage groups
 
+# Single variables left out for the same reason: evaluation of the outgoing VG–D–B
+# government is closely tied to whether the respondent voted for a governing party.
+EXCLUDE_VARS <- c("govprfm")
+# EXCLUDE_VARS <- character(0)  # ← uncomment to put government performance back in
+
 leak_vars <- meta |>
-  dplyr::filter(group %in% LEAK_GROUPS) |>
+  dplyr::filter(group %in% LEAK_GROUPS | short_name %in% EXCLUDE_VARS) |>
   dplyr::pull(label)
 
 cat("Sleppum", length(leak_vars), "breytum úr hópunum:\n  ",
-    paste(LEAK_GROUPS, collapse = ", "), "\n")
+    paste(LEAK_GROUPS, collapse = ", "), "\n  og breytunum:",
+    paste(EXCLUDE_VARS, collapse = ", "), "\n")
 
 # `flokkur` is the target; everything else minus the leakage vars is `X_raw`
 X_raw <- df |> select(-flokkur, -dplyr::any_of(leak_vars))
@@ -138,44 +147,24 @@ cat(sprintf("Grunnt tré – train: %.3f  test: %.3f\n",
             mean(pred_train == y_train), mean(pred_test == y_test)))
 ```
 
-### Trésmyndin
+### Trésmyndin (Mynd 8.1 í bókinni)
 
-Við notum `rpart.plot` til að fá lesanlega íslenska mynd. Hver hnútur sýnir spáðan flokk + fjölda svarenda í hnúðnum.
+Við notum `rpart.plot` til að fá lesanlega íslenska mynd. Í hverjum kassa er **spáður flokkur** (algengasti flokkurinn í hnútnum), **hlutfall** svarenda í hnútnum sem kaus þann flokk og **fjöldi** svarenda úr þjálfunarmenginu. Í innri hnútum kemur spurningin sem tréð skiptir eftir; þau sem svara „já“ fara til vinstri.
 
-```{r dt-plot, fig.width=11, fig.height=7}
-# Flokkalitir koma nú úr iskos_style.R (class_colors) — sömu mettuðu vörumerkjalitir og í rsetup.R.
-# Þar sem litirnir eru dökkir veljum við texta (svartan/hvítan) eftir birtu hvers litar með
-# iskos_text_on(), svo textinn í hverjum hnút sé alltaf læsilegur.
-party_box_colors <- class_colors
-# One-letter party code (last char before the closing paren in the class label).
-party_letter <- c(
-  "Samfylkinguna (S)"          = "S",
-  "Sjálfstæðisflokkinn (D)"    = "D",
-  "Viðreisn (C)"               = "C",
-  "Framsóknarflokkinn (B)"     = "B",
-  "Miðflokkinn (M)"            = "M",
-  "Flokk fólksins (F)"         = "F",
-  "Vinstri (sameinað)"         = "V"
-)
-
-# Predicted class per node → its colour, contrasting text colour, and letter
+```{r dt-plot, fig.width=8.5, fig.height=5.4}
+# Ljós blær af flokkslitnum með dökkum texta og rönd í fullum flokkslit (sjá iskos_tint()).
 predicted_classes <- attr(dt, "ylevels")[dt$frame$yval]
-box_cols          <- unname(party_box_colors[predicted_classes])
-text_cols         <- iskos_text_on(box_cols)   # svartur/hvítur texti eftir birtu flokkslitarins
+border_cols <- unname(class_colors[predicted_classes])
+box_cols    <- iskos_tint(border_cols)
 
 # Per-class counts: yval2 cols 2..(n_classes+1) hold integer counts per class.
 classes_order <- attr(dt, "ylevels")
 n_classes     <- length(classes_order)
 counts_mat    <- dt$frame$yval2[, 2:(n_classes + 1), drop = FALSE]
-total_n       <- dt$frame$n[1]                          # n at the root
-node_pct      <- round(100 * dt$frame$n / total_n, 0)
-letters_ord   <- unname(party_letter[classes_order])
+node_n        <- dt$frame$n
+node_share    <- counts_mat[cbind(seq_len(nrow(counts_mat)), dt$frame$yval)] / node_n
 
-# Compute the primary split rule for each non-leaf node directly from dt$splits.
-# (rpart stores splits in tree-order: for each non-leaf node, the rows are
-# 1 primary + `ncompete` competing + `nsurrogate` surrogate.)
 shorten <- function(name) {
-  if (!"short_label" %in% colnames(meta)) return(name)
   idx <- match(name, meta$label)
   if (!is.na(idx)) {
     s <- meta$short_label[idx]
@@ -184,115 +173,87 @@ shorten <- function(name) {
   name
 }
 
-# value_labels.json maps each ordinal variable to {code: Icelandic text}. We use it
-# to append the Likert label for the boundary integer in each split rule, so a reader
-# doesn't have to remember what e.g. "ESB > 3" means.
-value_labels <- jsonlite::fromJSON(file.path(DATA, "value_labels.json"),
-                                   simplifyVector = FALSE)
+# value_labels.json maps each ordinal variable to {code: Icelandic text}. We append the
+# Likert label of the boundary integer, so a reader sees e.g. "Afstaða til ESB > 3 (Hlutlaus/óviss)".
+value_labels <- jsonlite::fromJSON(file.path(DATA, "value_labels.json"), simplifyVector = FALSE)
 
 # Render a split rule. Two cases:
-#   * Numeric/ordinal (ncat == -1 or 1): integer-clean threshold, plus the Likert text
-#     label of the boundary integer when present.
-#     Integer-clean rewrite: every feature is integer-coded (Likert 1–5, 0–10),
-#     so x.5 thresholds are equivalent to strict integer comparisons:
-#       value <  6.5  ⟺  value <  7    (ncat == -1, "<")
-#       value >= 3.5  ⟺  value >  3    (ncat ==  1, ">=")
-#   * Categorical (ncat > 1): rpart stores the split as a row in dt$csplit, with
-#     a 1/3 code per factor level (1 = goes left, 3 = goes right). We list the
-#     "yes" (= left) levels, shortened if there are too many to fit.
+#   * Numeric/ordinal (ncat == -1 or 1): every feature is integer-coded, so x.5 thresholds are
+#     rewritten as strict integer comparisons (value < 6.5  <=>  value < 7).
+#   * Categorical (ncat > 1): rpart stores the split in dt$csplit with a 1/3 code per level
+#     (1 = goes left). We list the left ("já") levels as "X = a eða b"; the ∈ glyph is missing
+#     from common fonts and renders as an empty box.
 format_split_rule <- function(varname, thr, ncat) {
   if (ncat > 1) {
-    cs_row <- dt$csplit[as.integer(thr), seq_len(ncat)]
-    lvls   <- attr(dt, "xlevels")[[varname]]
+    cs_row      <- dt$csplit[as.integer(thr), seq_len(ncat)]
+    lvls        <- attr(dt, "xlevels")[[varname]]
     left_levels <- lvls[cs_row == 1]
     if (length(left_levels) == 0) return(shorten(varname))
-    if (length(left_levels) <= 2) {
-      rhs <- paste(left_levels, collapse = ", ")
-    } else {
-      rhs <- sprintf("%s, … (%d gildi)",
-                     paste(head(left_levels, 2), collapse = ", "),
-                     length(left_levels))
-    }
-    return(sprintf("%s ∈ {%s}", shorten(varname), rhs))
+    rhs <- if (length(left_levels) <= 2) paste(left_levels, collapse = " eða ") else
+      sprintf("%s, … (%d gildi)", paste(head(left_levels, 2), collapse = ", "), length(left_levels))
+    return(sprintf("%s = %s", shorten(varname), rhs))
   }
-
   is_half <- abs(thr - round(thr)) > 1e-9
   if (ncat == -1) {
     int_thr <- if (is_half) as.integer(ceiling(thr)) else as.integer(round(thr))
-    op      <- if (is_half) "<" else "<="
-  } else {  # ncat == 1
+    op      <- if (is_half) "<" else "≤"
+  } else {
     int_thr <- if (is_half) as.integer(floor(thr)) else as.integer(round(thr))
-    op      <- if (is_half) ">" else ">="
+    op      <- if (is_half) ">" else "≥"
   }
   rule <- sprintf("%s %s %d", shorten(varname), op, int_thr)
   vl   <- value_labels[[varname]]
   if (!is.null(vl)) {
     lab <- vl[[as.character(int_thr)]]
-    # Skip labels that are just the digit (e.g. "7" on the 0–10 scale) — they add no info.
-    if (!is.null(lab) && is.character(lab) && nzchar(lab) &&
-        trimws(lab) != as.character(int_thr))
+    if (!is.null(lab) && is.character(lab) && nzchar(lab) && trimws(lab) != as.character(int_thr))
       rule <- sprintf("%s (%s)", rule, lab)
   }
   rule
 }
 
-nonleaf_rows         <- which(dt$frame$var != "<leaf>")
-splits_per_node      <- dt$frame$ncompete[nonleaf_rows] + dt$frame$nsurrogate[nonleaf_rows] + 1
-primary_split_rows   <- c(1, cumsum(splits_per_node)[-length(splits_per_node)] + 1)
-split_text_per_node  <- character(nrow(dt$frame))
+# rpart stores splits in tree order: per non-leaf node 1 primary + competing + surrogate rows.
+nonleaf_rows        <- which(dt$frame$var != "<leaf>")
+splits_per_node     <- dt$frame$ncompete[nonleaf_rows] + dt$frame$nsurrogate[nonleaf_rows] + 1
+primary_split_rows  <- c(1, cumsum(splits_per_node)[-length(splits_per_node)] + 1)
+split_text_per_node <- character(nrow(dt$frame))
 for (k in seq_along(nonleaf_rows)) {
-  node_i  <- nonleaf_rows[k]
-  r       <- primary_split_rows[k]
-  varname <- as.character(dt$frame$var[node_i])
-  thr     <- dt$splits[r, "index"]
-  ncat    <- dt$splits[r, "ncat"]
-  split_text_per_node[node_i] <- format_split_rule(varname, thr, ncat)
+  i <- nonleaf_rows[k]; r <- primary_split_rows[k]
+  split_text_per_node[i] <- format_split_rule(as.character(dt$frame$var[i]),
+                                              dt$splits[r, "index"], dt$splits[r, "ncat"])
 }
-# Suppress rpart.plot's on-edge split labels — they are rendered inside the parent box.
-my_split_fun <- function(x, labs, digits, varlen, faclen) rep("", length(labs))
 
-# Build the custom label text for each node — split question goes at the BOTTOM so it
-# reads naturally below the counts inside the parent's box (mirrors the Python render).
-#   <party letter>
-#   D:n  S:n  B:n  C:n  F:n  M:n  V:n
-#   XX%
-#   <split rule>                       (only for non-leaf nodes)
+# Box text: party (nominative), its share in the node and the node size. The question asked
+# at each inner node is drawn just below its box (split.fun); "já" goes left, "nei" right.
+wrap_lines  <- function(s, width = 30) paste(strwrap(s, width = width), collapse = "\n")
 node_labels <- vapply(seq_len(nrow(dt$frame)), function(i) {
-  counts_line <- paste(sprintf("%s:%d", letters_ord, as.integer(counts_mat[i, ])),
-                       collapse = "  ")
-  base <- sprintf("%s\n%s\n%d%%", letters_ord[dt$frame$yval[i]], counts_line, node_pct[i])
-  if (nzchar(split_text_per_node[i])) paste0(base, "\n", split_text_per_node[i]) else base
+  sprintf("%s\n%d%% · n = %d", class_names_nom[[predicted_classes[i]]],
+          round(100 * node_share[i]), node_n[i])
 }, character(1))
-
+# split.fun must return one label per frame row. rpart.plot stores the label of a split on
+# the parent's *left child*, which in rpart's pre-order frame is the very next row.
+split_labels <- rep("", nrow(dt$frame))
+split_labels[nonleaf_rows + 1] <- vapply(split_text_per_node[nonleaf_rows],
+                                         function(s) wrap_lines(paste0(s, "?")), character(1))
 my_node_fun  <- function(x, labs, digits, varlen) node_labels
-# Suppress rpart.plot's on-edge split labels — we render them inside the parent box instead.
-my_split_fun <- function(x, labs, digits, varlen, faclen) rep("", length(labs))
+my_split_fun <- function(x, labs, digits, varlen, faclen) split_labels
 
-# Hærri mynd (height 1350) gefur meira lóðrétt rými svo textinn í hnútunum sé læsilegur.
-png(file.path(FIGS, "decision_tree_depth3.png"),
-    width = 1700, height = 1350, res = 150)
-rpart.plot(
-  dt,
-  type          = 2,
-  under         = FALSE,           # split text is now inside the parent box instead
-  extra         = 0,               # node text comes from my_node_fun
-  yesno         = FALSE,           # suppress the small "yes/no" branch labels — they were
-                                   # colliding with the in-box split text
-  node.fun      = my_node_fun,
-  split.fun     = my_split_fun,
-  fallen.leaves = TRUE,
-  varlen        = 0,
-  faclen        = 0,
-  cex           = 0.68,
-  box.col       = box_cols,        # one colour per node, keyed on predicted class
-  col           = text_cols,       # contrasting text colour per node (white on dark fills)
-  branch.lty    = 1,
-  shadow.col    = 0,
-  nn            = FALSE
-)
-invisible(dev.off())
-
-knitr::include_graphics(file.path(FIGS, "decision_tree_depth3.png"))
+draw_tree <- function() {
+  par(family = "Arial")
+  rpart.plot(
+    dt, type = 2, extra = 0,
+    yesno = 2, yes.text = "já", no.text = "nei",   # label every branch
+    node.fun = my_node_fun, split.fun = my_split_fun,
+    fallen.leaves = TRUE, varlen = 0, faclen = 0, roundint = FALSE,
+    cex = 0.74, box.col = box_cols, border.col = border_cols, col = iskos_text_dark,
+    split.cex = 0.92, split.font = 1, split.col = iskos_text_mid,
+    split.box.col = iskos_color_background, split.border.col = iskos_color_background,
+    split.yshift = -1.1,                         # question just below the branch line
+    branch.col = "grey45", branch.lwd = 1.2, shadow.col = 0, nn = FALSE,
+    space = 0.5, gap = 0.5
+  )
+}
+iskos_save(draw_tree, "mynd_8_1_akvordunartre", width = 8.5, height = 5.4)
+draw_tree()
 ```
 
 ## 6. Of djúpt tré — ofmátun
@@ -379,46 +340,57 @@ cat("\n     naive macro-recall:", round(mean(recall_per_class(y_test, pred_test_
 cat("  balanced macro-recall:",  round(mean(recall_per_class(y_test, pred_test_rfb)), 3), "\n")
 ```
 
-## 8. Ruglingsfylki slembiskógarins
+## 8. Ruglingsfylki slembiskógarins (Mynd 8.2 í bókinni)
 
-Ruglingsfylki sýnir fyrir hvern raunverulegan flokk (lína) hvernig líkanið flokkaði svarendurna (dálkur). Á hornalínunni eru réttar spár; reitir utan hornalínunnar eru ranglega flokkaðir.
+Ruglingsfylki sýnir fyrir hvern raunverulegan flokk (lína) hvernig líkanið flokkaði svarendurna (dálkur). Tölurnar eru **hlutföll innan línu**: hver lína leggst saman í 100%, og á hornalínunni sést hlutfall kjósenda hvers flokks sem fékk rétta spá. Fjöldi kjósenda hvers flokks í prófunarmenginu er í sviga. Flokkunum er raðað frá vinstri til hægri eftir meðalstaðsetningu kjósenda þeirra á vinstri-hægri kvarðanum, svo „nágrannaflokkar“ standa hlið við hlið.
 
-```{r confusion-matrix, fig.height=6.5, fig.width=7}
-cm <- table(satt = y_test, spá = pred_test_rf)
-cm_df <- as.data.frame(cm)
+```{r confusion-matrix, fig.width=7.5, fig.height=5.6}
+# Order parties left -> right by their voters' mean self-placement (training data, valid answers).
+lr_q        <- meta$label[meta$short_name == "lrscale"]
+lr_ok       <- X_train[[lr_q]] >= 0
+party_order <- names(sort(tapply(X_train[[lr_q]][lr_ok], y_train[lr_ok], mean)))
 
-p_cm <- ggplot(cm_df, aes(x = spá, y = satt, fill = Freq)) +
-  geom_tile() +
-  # Hvítur merkimiði (label) með svörtum tölum les betur ofan á dökkum reitum en ber texti.
-  # label.size = 0 fjarlægir rammann um miðann — geom_label styður ekki `linewidth` beint.
-  geom_label(aes(label = Freq), fill = "white", colour = "black",
-             size = 3.2, label.size = 0) +
-  scale_fill_gradient(low = "white", high = iskos_color_main) +  # meginlitur bókarinnar
-  # ATH ásmerkingar: aes() varpar `spá` (það sem líkanið spáði) á x og `satt` (raunverulegt
-  # val) á y — sama uppsetning og Python-myndin (ConfusionMatrixDisplay: Predicted á x, True
-  # á y). Merkingarnar fylgja því vörpuninni svo þær passi við gögnin og R/Python séu eins.
-  labs(title = "",
-       x = "Spáð flokksval byggt á slembiskógi",
-       y = "Raunverulegt flokksval byggt á ÍSKOS gögnum") +
-  theme_iskos(base_size = 10) +
-  theme(
-    axis.text.x  = element_text(angle = 45, hjust = 1),
-    panel.grid   = element_blank()
+cm    <- table(satt = y_test, spá = pred_test_rf)
+n_row <- rowSums(cm)
+row_lab <- setNames(sprintf("%s (n = %d)", class_names_nom[party_order], n_row[party_order]), party_order)
+cm_df <- as.data.frame(cm, stringsAsFactors = FALSE) |>
+  mutate(
+    pct      = Freq / n_row[satt],
+    satt_lab = factor(row_lab[satt], levels = rev(row_lab[party_order])),   # first party on top
+    spa_lab  = factor(class_names_nom[spá], levels = class_names_nom[party_order]),
+    txt      = ifelse(Freq == 0, "", sprintf("%.0f%%", 100 * pct)),
+    txt_col  = ifelse(pct > 0.45, "white", iskos_text_dark)
   )
-ggsave(file.path(FIGS, "confusion_matrix_rf.png"), p_cm,
-       width = 7, height = 6.5, dpi = 150)
+
+p_cm <- ggplot(cm_df, aes(x = spa_lab, y = satt_lab, fill = pct)) +
+  geom_tile(colour = "white", linewidth = 0.8) +
+  geom_text(aes(label = txt, colour = txt_col), size = 3.7, family = "Arial") +
+  scale_colour_identity() +
+  scale_fill_gradient(low = "#eef3f9", high = iskos_color_main, limits = c(0, 1), guide = "none") +
+  labs(x = "Flokkur sem líkanið spáði", y = "Flokkur sem svarandi kaus (ÍSKOS)") +
+  theme_iskos(base_size = 11) +
+  theme(
+    text        = element_text(family = "Arial"),
+    panel.grid  = element_blank(),
+    axis.text.x = element_text(angle = 30, hjust = 1, colour = iskos_text_dark),
+    axis.text.y = element_text(colour = iskos_text_dark),
+    axis.title  = element_text(colour = iskos_text_dark)
+  )
+iskos_save(p_cm, "mynd_8_2_ruglingsfylki", width = 7.5, height = 5.6)
 p_cm
 ```
 
-## 9. Mikilvægustu breyturnar
+## 9. Mikilvægustu breyturnar (Mynd 8.3 í bókinni)
 
-`importance` í slembiskógi mælir hversu mikið hver eiginleiki minnkar Gini-óhreinleika að meðaltali yfir trén 300. Næsta vinnubók notar **SHAP** sem gefur dýpri sundurliðun.
+Við berum saman tvo mælikvarða á mikilvægi breyta:
 
-```{r feature-importance, fig.height=6, fig.width=8}
-# Substitute long Icelandic question labels with their short forms from feature_meta.csv
-# so the y-axis is readable. Falls back to the full label when no short form is set.
+- **Gini-mikilvægi** (`MeanDecreaseGini`): hversu mikið skiptingar á breytunni minnka Gini-óhreinleika að meðaltali yfir trén 300. Það á til að ofmeta breytur með mörg möguleg gildi, eins og aldur, menntun og kjördæmi.
+- **Umröðunarmikilvægi** (`MeanDecreaseAccuracy`, óskalað): hversu mikið nákvæmnin lækkar (í prósentustigum) ef svörum við breytunni er stokkað af handahófi milli svarenda.
+
+Næsta vinnubók notar **SHAP** til að skoða einstakar spár.
+
+```{r feature-importance, fig.width=9.5, fig.height=5.2}
 short_for_imp <- function(name) {
-  if (!"short_label" %in% colnames(meta)) return(name)
   idx <- match(name, meta$label)
   if (!is.na(idx)) {
     s <- meta$short_label[idx]
@@ -427,26 +399,33 @@ short_for_imp <- function(name) {
   name
 }
 
-imp <- as.data.frame(importance(rf)) |>
+imp_all <- as.data.frame(importance(rf, scale = FALSE)) |>
   tibble::rownames_to_column("feature") |>
-  arrange(desc(MeanDecreaseGini)) |>
-  head(15) |>
   mutate(
-    feature_short = vapply(feature, short_for_imp, character(1)),
-    feature_short = forcats::fct_reorder(feature_short, MeanDecreaseGini)
+    label = vapply(feature, short_for_imp, character(1)),
+    group = factor(group_short[meta$group[match(feature, meta$label)]], levels = names(group_colors)),
+    perm  = 100 * MeanDecreaseAccuracy
   )
 
-var_imp <- ggplot(imp, aes(x = MeanDecreaseGini, y = feature_short)) +
-  geom_col(fill = iskos_color_main) +   # iskos_color_main
-  labs(title = "",
-       x = "Meðallækkun á Gini stuðli", y = NULL) +
-  theme_iskos(base_size = 10) +
-  theme(panel.grid.major.y = element_blank())
+top_plot <- function(col, xlab, title) {
+  d <- imp_all |> arrange(desc(.data[[col]])) |> head(10) |>
+    mutate(label = forcats::fct_reorder(label, .data[[col]]))
+  ggplot(d, aes(x = .data[[col]], y = label, fill = group)) +
+    geom_col(width = 0.72, show.legend = TRUE) +   # keep swatches for groups absent from a panel
+    scale_fill_manual(values = group_colors, limits = names(group_colors), drop = FALSE, name = NULL) +
+    guides(fill = guide_legend(nrow = 2)) +
+    labs(x = xlab, y = NULL, title = title) +
+    theme_iskos_legend(base_size = 11) +
+    theme(text = element_text(family = "Arial"), panel.grid.major.y = element_blank(),
+          axis.text.y = element_text(colour = iskos_text_dark))
+}
+p_gini <- top_plot("MeanDecreaseGini", "Meðallækkun á Gini-óhreinleika", "(a) Gini-mikilvægi")
+p_perm <- top_plot("perm", "Lækkun á nákvæmni (prósentustig)", "(b) Umröðunarmikilvægi")
+var_imp <- (p_gini | p_perm) + plot_layout(guides = "collect") &
+  theme(legend.position = "bottom", legend.text = element_text(size = 9.5))
 
+iskos_save(var_imp, "mynd_8_3_mikilvaegi", width = 9.5, height = 5.2)
 var_imp
-
-ggsave(file.path(FIGS, "imp_rf_fig.png"), var_imp,
-       width = 7, height = 6.5, dpi = 150)
 ```
 
 ## 10. Vistum líkanið

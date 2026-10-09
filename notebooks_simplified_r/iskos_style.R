@@ -74,3 +74,60 @@ theme_iskos_legend <- function(base_size = 11) {
       legend.text      = element_text(size = base_size - 3)
     )
 }
+
+# ---- Útgáfumyndir (kafli 8 í bókinni) ----
+# Flokkaheitin í gögnunum eru í þolfalli („Hvern kaust þú?“). Á myndum notum við nefnifall.
+class_names_nom <- c(
+  "Samfylkinguna (S)"       = "Samfylkingin",
+  "Sjálfstæðisflokkinn (D)" = "Sjálfstæðisflokkurinn",
+  "Viðreisn (C)"            = "Viðreisn",
+  "Framsóknarflokkinn (B)"  = "Framsóknarflokkurinn",
+  "Miðflokkinn (M)"         = "Miðflokkurinn",
+  "Flokk fólksins (F)"      = "Flokkur fólksins",
+  "Vinstri (sameinað)"      = "Vinstri (sameinað)"
+)
+
+# Ljós blær af lit (blandað við hvítt). Ljósir reitir með dökkum texta eru læsilegri en
+# mettaðir flokkslitir og halda sér líka í svarthvítri prentun.
+iskos_tint <- function(hex_color, amount = 0.62) {
+  colorspace::lighten(hex_color, amount = amount, space = "HLS")
+}
+
+# Litir fyrir breytuhópa (Okabe–Ito: greinanlegir fyrir fólk með litblindu).
+group_colors <- c(
+  "Félagsleg staða"              = "#E69F00",
+  "Málefnaviðhorf"               = "#0072B2",
+  "Frammistaða stjórnvalda"      = "#009E73",
+  "Stjórnmálaviðhorf og -hegðun" = "#CC79A7",
+  "Miðlanotkun"                  = "#56B4E9",
+  "Vinstri-hægri staða"          = "#D55E00"
+)
+group_short <- c(
+  "1 – Félagsleg staða"         = "Félagsleg staða",
+  "2 – Málefnaviðhorf"          = "Málefnaviðhorf",
+  "3 – Frammistaða stjórnvalda" = "Frammistaða stjórnvalda",
+  "6 - Viðhorf og hegðun"       = "Stjórnmálaviðhorf og -hegðun",
+  "7 - Miðlar"                  = "Miðlanotkun",
+  "8 - Hægri/Vinstri"           = "Vinstri-hægri staða"
+)
+
+# Vistar mynd bæði sem PNG (300 dpi, til birtingar í Word) og SVG (vigurmynd fyrir umbrot).
+# `p` er annaðhvort ggplot-hlutur eða fall sem teiknar mynd með grunngrafík (t.d. rpart.plot).
+# (SVG í stað PDF: cairo_pdf er ekki alltaf tiltækt og pdf() styður ekki alla Unicode-stafi.)
+iskos_save <- function(p, name, width, height, dir = FIGS) {
+  png_path <- file.path(dir, paste0(name, ".png"))
+  svg_path <- file.path(dir, paste0(name, ".svg"))
+  if (inherits(p, "ggplot") || inherits(p, "patchwork")) {
+    ggplot2::ggsave(png_path, p, width = width, height = height, dpi = 300,
+                    device = ragg::agg_png, bg = iskos_color_background)
+    ggplot2::ggsave(svg_path, p, width = width, height = height,
+                    device = svglite::svglite, bg = iskos_color_background)
+  } else {
+    ragg::agg_png(png_path, width = width, height = height, units = "in", res = 300,
+                  background = iskos_color_background)
+    p(); invisible(grDevices::dev.off())
+    svglite::svglite(svg_path, width = width, height = height, bg = iskos_color_background)
+    p(); invisible(grDevices::dev.off())
+  }
+  invisible(c(png_path, svg_path))
+}
