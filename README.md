@@ -1,120 +1,74 @@
-# ÍSKOS 2024 — Vote-choice prediction with machine learning
+# Getur gervigreindin spáð fyrir um hvaða flokk ég kýs?
 
-Companion code for the book chapter *"Getur gervigreindin spáð fyrir um hvaða flokk ég kýs?"*.
+Kóði og vinnubækur sem fylgja kafla 8 í ritrýndri bók Háskólaútgáfunnar um alþingiskosningarnar 2024.
+Höfundar kaflans eru Hafsteinn Birgir Einarsson og Hafsteinn Einarsson.
 
-Five Jupyter notebooks explore the data, train a sequence of classifiers to predict 2024 Alþingi vote choice from the Icelandic Election Study (ÍSKOS 2024) survey, interpret the best model with SHAP, and let the reader feed their own answers into the trained models.
+Í kaflanum er vélnámi beitt á kjósendakönnun Íslensku kosningarannsóknarinnar (ÍSKOS) 2024 til að
+giska á hvaða flokk svarendur kusu út frá öðrum svörum þeirra í sömu könnun. Byrjað er á einföldum
+grunnlíkönum, síðan er þjálfað ákvörðunartré og loks slembiskógur (e. random forest). Til að skilja
+hvaða upplýsingar líkanið nýtir eru notaðir tveir mælikvarðar á mikilvægi breyta (Gini-mikilvægi og
+umröðunarmikilvægi) og SHAP-gildi fyrir einstakar spár.
 
-## Setup
+Vinnubækurnar eru skrifaðar með lesendur bókarinnar í huga: skýringar eru á íslensku og hvert skref er
+útskýrt. Þú getur líka sett inn eigin svör og séð hvaða flokk líkanið telur líklegast að þú hafir kosið.
 
-Requires [`uv`](https://docs.astral.sh/uv/) and Python 3.12.
+## Gögnin
+
+**Gögn ÍSKOS fylgja ekki þessari geymslu.** Skilmálar um notkun gagnanna heimila ekki að þeim sé
+dreift, og það á líka við um gögn á svarendastigi sem unnin eru úr þeim. Upplýsingar um ÍSKOS og aðgang
+að gögnunum eru á [iskos.hi.is](https://iskos.hi.is/).
+
+Greiningin notar skrána `ISKOS2024_med_aukabreytum_20260318.sav` (kjósendakönnun ÍSKOS 2024 ásamt
+aukabreytum). Settu hana hér:
+
+```
+Kjósendakönnun/ÍSKOS kjósenda 2024/ISKOS2024_med_aukabreytum_20260318.sav
+```
+
+Í geymslunni eru aðeins lýsigögn: flokkun breyta í breytuhópa (`iskos24_breytuflokkun.csv`) og
+breytuheiti og gildismerki (`data/feature_meta.csv`, `data/value_labels.json`).
+
+## Uppsetning
+
+**Python** (3.12) með [`uv`](https://docs.astral.sh/uv/):
 
 ```bash
 uv sync
 ```
 
-First `uv sync` takes several minutes because AutoGluon pulls in PyTorch, LightGBM, XGBoost, and CatBoost.
+Ákvörðunartréð í Python-útgáfunni er teiknað með `graphviz` (á macOS: `brew install graphviz`).
 
-## Running the notebooks
+**R** (4.3 eða nýrra):
+
+```r
+install.packages(c(
+  "haven", "dplyr", "tidyr", "readr", "ggplot2", "forcats", "jsonlite",
+  "rpart", "rpart.plot", "randomForest", "nnet", "fastshap", "shapviz",
+  "patchwork", "ragg", "svglite", "colorspace", "rmarkdown", "knitr"
+))
+```
+
+## Vinnubækurnar
+
+Kaflinn byggir á einfölduðu keðjunni, sem er til bæði í Python og R. Keyrðu vinnubækurnar í þessari röð.
+
+| Skref | Python (`notebooks_simplified/`) | R (`notebooks_simplified_r/`) | Hvað gerist |
+|---|---|---|---|
+| 0 | `00_preprocess.ipynb` | `00_preprocess.Rmd` | Les SPSS-skrána, velur svarendur ÍSKOS-hlutans, býr til markbreytuna og skrifar `data/iskos_clean.csv` |
+| 1 | `01_eda.ipynb` | `01_eda.Rmd` | Lýsandi myndir af hverri breytu og tengslum hennar við flokksval |
+| 2 | `02_models.ipynb` | `02_models.Rmd` | Grunnlíkön, ákvörðunartré, slembiskógur, ruglingsfylki og mikilvægi breyta |
+| 3 | `03_predict_yourself.ipynb` | `03_predict_yourself.Rmd` | Settu inn eigin svör og sjáðu spá líkansins með SHAP-fossariti |
+
+Úr rót verkefnisins:
 
 ```bash
-uv run jupyter lab
-```
-
-Run the notebooks in order:
-
-1. **`notebooks/00_data_exploration.ipynb`** — surveys the raw .sav: shape, variable-naming scheme, target distribution vs. official 2024 election results, missingness by module, and a per-column plot gallery.
-2. **`notebooks/01_data_prep.ipynb`** — loads `Kjósendakönnun/ÍSKOS kjósenda 2024/ISKOS2024_med_aukabreytum_20260318.sav`, collapses the target to 7 classes (6 seated parties + merged Sósíalistar/Píratar/VG), selects features across four groups (social status, issue attitudes, government performance, issue ownership), splits 80/20 stratified, and writes cleaned data to `data/processed/`.
-3. **`notebooks/02_models.ipynb`** — trains a uniform baseline, a modal baseline, a decision tree, random forest (base + enriched), `HistGradientBoostingClassifier` (base + enriched), and AutoGluon (base + enriched). Runs both a naive pass and a class-weighted pass for imbalance correction. Saves models to `models/` and an accuracy table to `figures/accuracy_table.csv`. **Takes ~50 minutes** because AutoGluon runs for 15 minutes per feature set × both passes.
-4. **`notebooks/03_shap.ipynb`** — computes SHAP values for `rf_base`, `rf_enriched`, and the class-weighted variants, produces summary and per-class plots, and writes the top-features tables.
-5. **`notebooks/04_my_predictions.ipynb`** — interactive: fill in your own survey responses and see what each trained model predicts, with a SHAP waterfall per model.
-
-To execute them non-interactively:
-
-```bash
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/00_data_exploration.ipynb
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/01_data_prep.ipynb
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/02_models.ipynb
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/03_shap.ipynb
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/04_my_predictions.ipynb
-```
-
-### Variable and value labels
-
-All Icelandic labels (question text, categorical value labels) are loaded directly from the `.sav` file's SPSS metadata via `pyreadstat.read_sav(..., metadataonly=True)`. Short axis-tick labels (1–3 words) are curated in `src/iskos_labels.py` — see `SHORT_QUESTION_LABELS_IS`.
-
-## Output layout
-
-```
-data/processed/   # intermediate artifacts shared between notebooks
-models/           # trained classifiers (.pkl + autogluon_* directories)
-figures/          # PNG figures + CSV tables for the chapter
-```
-
-Key outputs referenced in the chapter:
-
-- `figures/decision_tree.png` — Mynd 1
-- `figures/confusion_matrix_rf_base.png` — Mynd 2 (ruglingsyfirlit)
-- `figures/shap_summary.png` — Mynd 3 (SHAP global)
-- `figures/chapter_numbers.csv` — accuracy numbers to fill the XX,X% placeholders
-
-## Simplified chain (`notebooks_simplified/`)
-
-A pared-down version of the analysis aimed at students. Restricted to the ÍSKOS module
-(`module == 2`, n ≈ 1193), only `DecisionTreeClassifier` + `RandomForestClassifier`, and an
-interactive "predict yourself" notebook at the end. End-to-end runtime: under one minute.
-
-1. **`notebooks_simplified/00_preprocess.ipynb`** — reads the `.sav` with
-   `pyreadstat.read_sav(..., user_missing=True)`, filters `module == 2`, builds the 7-class
-   `flokkur` target (6 seated parties + merged V+P+J), recodes SPSS user-missing codes
-   995–999 to a single sentinel per dtype, and writes `data/iskos_clean.csv` +
-   `data/feature_meta.csv`.
-2. **`notebooks_simplified/01_eda.ipynb`** — class balance, per-feature distribution gallery,
-   and per-feature × `flokkur` gallery (stacked bars for nominals, jitter strip plots with
-   per-class mean for ordinals). One worked example per pattern, then a loop.
-3. **`notebooks_simplified/02_models.ipynb`** — drops near-target groups 4 (málefnaeign)
-   and 5 (flokkshollusta) with an explicit one-line opt-in for students who want to see
-   leakage, one-hots, splits stratified 80/20, and trains four classifiers: a
-   most-frequent baseline, a depth-3 decision tree (rendered with graphviz, node labels
-   show *rule + majority party + n=…*), a deep tree to demonstrate overfitting, and a
-   300-tree random forest. Saves `models/rf.pkl` + `models/feature_columns.json`.
-4. **`notebooks_simplified/03_predict_yourself.ipynb`** — student fills in a `my_answers`
-   Python dict; the trained RF returns class probabilities, a SHAP waterfall for the
-   predicted class, and a global SHAP summary on all 1012 respondents.
-
-The notebooks are generated from one-shot `nbformat` scripts under
-`scripts/build_simplified/`. Edit the script, re-run it, then re-execute the notebook —
-the script is the source of truth.
-
-**System dependency:** `graphviz` (for the decision-tree PNG). On macOS:
-`brew install graphviz`.
-
-```bash
+# Python
 uv run jupyter nbconvert --to notebook --execute --inplace notebooks_simplified/00_preprocess.ipynb
 uv run jupyter nbconvert --to notebook --execute --inplace notebooks_simplified/01_eda.ipynb
 uv run jupyter nbconvert --to notebook --execute --inplace notebooks_simplified/02_models.ipynb
 uv run jupyter nbconvert --to notebook --execute --inplace notebooks_simplified/03_predict_yourself.ipynb
-```
 
-## R Markdown chain (`notebooks_simplified_r/`)
-
-A parallel port of the simplified chain in R Markdown for students who prefer R. Same four
-steps, same data, same model story.
-
-Requires R ≥ 4.3 and the following packages: `haven`, `dplyr`, `tidyr`, `readr`,
-`ggplot2`, `forcats`, `rpart`, `rpart.plot`, `randomForest`, `fastshap`, `shapviz`,
-`rmarkdown`, `knitr`.
-
-```r
-install.packages(c(
-  "haven", "dplyr", "tidyr", "readr", "ggplot2", "forcats",
-  "rpart", "rpart.plot", "randomForest", "fastshap", "shapviz",
-  "rmarkdown", "knitr"
-))
-```
-
-Render each notebook from the command line:
-
-```bash
+# R
 cd notebooks_simplified_r
 Rscript -e 'rmarkdown::render("00_preprocess.Rmd")'
 Rscript -e 'rmarkdown::render("01_eda.Rmd")'
@@ -122,27 +76,77 @@ Rscript -e 'rmarkdown::render("02_models.Rmd")'
 Rscript -e 'rmarkdown::render("03_predict_yourself.Rmd")'
 ```
 
-Each notebook produces a self-contained `*.html` (gitignored — regenerable). The
-shared artifacts in `data/` and `models/` are the same as for the Python chain,
-so you can mix-and-match: run the R preprocessing then the Python EDA, or vice
-versa.
+Báðar forvinnsluvinnubækurnar skrifa sömu skrár í `data/`, svo það skiptir ekki máli hvor er keyrð.
+Keyrsla hvorrar keðju tekur fáeinar mínútur.
 
-Differences from the Python version:
+### Hvað fer inn í líkanið
 
-- R `rpart` / `randomForest` accept categorical predictors directly, so the
-  one-hot encoding step in NB02 is **not needed**. Factor levels saved alongside
-  the model let NB03 align the user's row at prediction time.
-- The decision-tree figure uses `rpart.plot` instead of `graphviz`.
-- SHAP values are computed with `fastshap` (Monte Carlo, model-agnostic) since
-  `treeshap` doesn't support `randomForest`. The waterfall and beeswarm plots
-  come from `shapviz`.
+- **Svarendur:** þeir sem fengu ÍSKOS-hluta spurningalistans (n = 1.193) og sögðust hafa kosið einn
+  af flokkunum sjö hér að neðan (n = 1.012).
+- **Markbreyta:** flokksval í alþingiskosningunum 2024 í sjö flokkum: þingflokkarnir sex auk
+  „Vinstri (sameinað)“, þar sem Sósíalistaflokkurinn, Píratar og Vinstri græn eru sameinuð. Þeir sem
+  kusu ekki, skiluðu auðu, vildu ekki segja hvað þeir kusu eða kusu Lýðræðisflokkinn eru ekki með.
+- **Breytur:** 38 spurningar um félagslega stöðu (þar á meðal aldur og menntun), málefnaviðhorf, mat
+  á efnahagsástandi, stjórnmálaviðhorf og -hegðun, miðlanotkun og sjálfsstaðsetningu á vinstri-hægri
+  kvarða.
+- **Breytur sem er sleppt:** málefnaeign (hvaða flokkur er talinn bestur í tilteknum málaflokki),
+  flokkshollusta (þar á meðal hversu vel svaranda líkar við hvern flokk) og mat á frammistöðu
+  ríkisstjórnarinnar 2021–2024. Allar eru þær svo nátengdar flokksvalinu að þær segja lítið annað en
+  hvaða flokk svarandinn kaus. Breyttu `LEAK_GROUPS` og `EXCLUDE_VARS` í 02-vinnubókinni til að sjá
+  áhrifin af því að taka þær með.
+- **Vantandi svör** eru sérstakt gildi: „Ekki svarað“ í flokkabreytum og −1 í raðbreytum. Enginn
+  svarandi er felldur út vegna þeirra.
+- **Skipting:** lagskipt 80/20 skipting í þjálfunar- og prófunarmengi (806/206) með slembifræi 42.
 
-## Reproducibility
+### Myndir kaflans
 
-- `random_state=42` on every split and estimator
-- `uv.lock` committed
-- Notebooks use deterministic file names everywhere
+| Mynd í bókinni | Skrá í `figures/` | Vinnubók |
+|---|---|---|
+| Mynd 8.1, ákvörðunartré | `mynd_8_1_akvordunartre.png` / `.svg` | `notebooks_simplified_r/02_models.Rmd` |
+| Mynd 8.2, ruglingsfylki | `mynd_8_2_ruglingsfylki.png` / `.svg` | `notebooks_simplified_r/02_models.Rmd` |
+| Mynd 8.3, mikilvægi breyta | `mynd_8_3_mikilvaegi.png` / `.svg` | `notebooks_simplified_r/02_models.Rmd` |
+| Mynd 8.4, SHAP-fossarit | `mynd_8_4_fossarit.png` / `.svg` | `notebooks_simplified/03_predict_yourself.ipynb` |
 
-## Data note
+Myndirnar eru vistaðar sem PNG (300 dpi) og SVG (vigurmynd). Möppurnar `figures/` og `models/` eru búnar
+til við keyrslu og fylgja ekki geymslunni.
 
-The raw `.sav` file lives inside `Kjósendakönnun/` and is **not shareable** per the ÍSKOS data-use agreement. The repository's `.gitignore` excludes that directory along with all generated artifacts; commit the notebooks themselves, not the outputs.
+### Stöðugleikagreiningar
+
+`scripts/robustness/robustness.R` endurtekur líkönin úr `02_models.Rmd` og skilar tölunum sem vísað er
+til í kaflanum: sömu skiptingu og í kaflanum, 50 endurteknar skiptingar, samanburð við fjölkosta
+lógistíska aðhvarfsgreiningu, líkön sem byggja aðeins á tveimur eða þremur spurningum og
+umröðunarmikilvægi. Keyrt úr rót verkefnisins eftir forvinnslu:
+
+```bash
+Rscript scripts/robustness/robustness.R            # líkanið í kaflanum
+Rscript scripts/robustness/robustness.R with_gov   # með mati á frammistöðu ríkisstjórnarinnar
+Rscript scripts/robustness/robustness.R all        # allar breytur, líka málefnaeign og flokkshollusta
+```
+
+### Um endurtakanleika
+
+- Öll slembiskref nota fast slembifræ (`random_state=42` í Python, `set.seed(42)` í R) og
+  `uv.lock` festir útgáfur Python-pakka.
+- R- og Python-útgáfurnar skila svipuðum en ekki nákvæmlega sömu tölum, því slembiskipting gagnanna
+  og meðhöndlun flokkabreyta er ólík milli `randomForest` og scikit-learn. Tölurnar í kaflanum eru úr
+  R-útgáfunni nema SHAP-fossaritið (Mynd 8.4), sem er gert í Python.
+- `predict()` í `randomForest` brýtur jafntefli í atkvæðum trjánna af handahófi. Þess vegna spáir
+  02-vinnubókin fyrst fyrir þjálfunargögnin og svo prófunargögnin, og stöðugleikaforritið gerir það sama.
+
+## Úttak vinnubóka
+
+Úttak vinnubóka getur innihaldið einstök svör úr könnuninni og er því fjarlægt áður en vinnubók fer í
+geymsluna. Það sér git-sía um (`scripts/strip_notebook_outputs.py`), en úttakið helst í þínu eintaki.
+Settu síuna upp einu sinni eftir að þú klónar geymsluna:
+
+```bash
+git config filter.nbstrip.clean "python3 scripts/strip_notebook_outputs.py"
+git config filter.nbstrip.smudge cat
+git config filter.nbstrip.required true
+```
+
+## Upphaflega greiningarkeðjan
+
+Í `notebooks/` er fyrsta og umfangsmeiri útgáfa greiningarinnar, með fleiri líkönum (meðal annars
+stigulsmögnuðum trjám og AutoGluon) og fleiri afbrigðum. Kaflinn byggir ekki á henni, en hún er höfð með
+fyrir þá sem vilja ganga lengra. Keyrsla hennar tekur um 50 mínútur.
