@@ -1,0 +1,176 @@
+---
+title: "ÍSKOS 2024 — 01. Skoðum gögnin (R)"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.width = 8, fig.height = 3.4, dpi = 110, fig.align = "left"
+)
+```
+
+Áður en við byggjum líkan kynnumst við gögnunum — **ein breyta í einu**, og svo tengsl við flokksval. Mynstrið er einfalt: fyrst eitt **vinnandi dæmi** í kóða (svo þú sjáir nákvæmlega hvað gerist), svo sama rökfræði í **lykkju** yfir allar breytur.
+
+```{r load}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+PROJECT <- normalizePath("..")
+DATA    <- file.path(PROJECT, "data")
+
+df   <- read_csv(file.path(DATA, "iskos_clean.csv"), show_col_types = FALSE)
+meta <- read_csv(file.path(DATA, "feature_meta.csv"), show_col_types = FALSE)
+# Index meta by Icelandic question text (the column name in `df`)
+meta_idx <- setNames(split(meta, seq_len(nrow(meta))), meta$label)
+
+# ÍSKOS litir + þema á einum stað (sjá iskos_style.R) — sami stíll og rsetup.R.
+# Skilgreinir theme_iskos(), theme_iskos_legend(), party_colors, class_colors, iskos_color_main …
+source("iskos_style.R")
+
+bar_color  <- iskos_color_main   # einn meginlitur fyrir stakar dreifingar
+text_color <- iskos_text_mid
+
+cat(nrow(df), "svarendur ·", ncol(df) - 1, "breytur (+ flokkur)\n")
+```
+
+## 1. Flokksskipting í úrtakinu
+
+Hvernig dreifast 7 flokksvalin meðal þeirra ÍsKos-svarenda sem við héldum eftir í forvinnslunni?
+
+```{r class-balance}
+counts <- df |> count(flokkur, sort = TRUE)
+ggplot(counts, aes(x = n, y = reorder(flokkur, n), fill = flokkur)) +
+  geom_col() +
+  geom_text(aes(label = scales::comma(n)),
+            hjust = -0.15, size = 3.2, colour = text_color) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.18))) +
+  scale_fill_manual(values = class_colors) +   # litur hverrar súlu = flokkslitur
+  labs(title = sprintf("Flokksskipting í ÍsKos bálknum (n=%d)", nrow(df)), x = NULL, y = NULL) +
+  theme_iskos() +
+  theme(axis.text.x = element_blank(), axis.title = element_blank())
+```
+
+## 2. Dreifing einnar breytu — vinnandi dæmi: `gender`
+
+Áður en við gerum þetta á allar breytur skoðum við eina vandlega. Fyrir hverja breytu viljum við sjá heitið, hópinn, dreifingu gildanna, og hve margir svöruðu ekki.
+
+```{r plot-distribution-fn}
+plot_distribution <- function(question) {
+  info  <- meta_idx[[question]]
+  dtype <- info$dtype
+  col   <- df[[question]]
+
+  if (dtype == "nominal") {
+    vc <- tibble(value = as.character(col)) |>
+            count(value, sort = TRUE) |>
+            mutate(value = forcats::fct_reorder(value, n))
+    ggplot(vc, aes(x = n, y = value)) +
+      geom_col(fill = bar_color) +
+      geom_text(aes(label = scales::comma(n)),
+                hjust = -0.15, size = 3.1, colour = text_color) +
+      scale_x_continuous(expand = expansion(mult = c(0, 0.14))) +
+      labs(title = question, x = NULL, y = NULL) +
+      theme_iskos() +
+      theme(axis.text.x = element_blank(), axis.title = element_blank())
+  } else {
+    s  <- as.integer(col)
+    rng <- seq(min(s), max(s))
+    vc <- tibble(value = factor(s, levels = rng)) |> count(value, .drop = FALSE)
+    ggplot(vc, aes(x = value, y = n)) +
+      geom_col(fill = bar_color, width = 0.8) +
+      geom_text(aes(label = ifelse(n == 0, "", scales::comma(n))),
+                vjust = -0.4, size = 3.1, colour = text_color) +
+      scale_y_continuous(expand = expansion(mult = c(0, 0.16))) +
+      labs(title = question, x = NULL, y = NULL) +
+      theme_iskos() +
+      theme(axis.text.y = element_blank(), axis.title = element_blank())
+  }
+}
+
+plot_distribution("Kyn svaranda (karl/kona/kvár)")
+```
+
+## 3. Sama rökfræði á allar breytur
+
+Lykkjum yfir öll 61 atriðin í `feature_meta`. Skrunaðu í gegn til að átta þig á þeim breytum sem skipta máli.
+
+```{r distribution-loop, fig.width=8, fig.height=3.4}
+for (q in meta$label) {
+  print(plot_distribution(q))
+}
+```
+
+## 4. Tengsl við flokksval — vinnandi dæmi (flokkabreyta): `gender`
+
+Fyrir hverja flokkabreytu sýnum við **stafla súlna**: hver svarhópur (t.d. „Kona", „Karl") fær eina súlu, og súlan er skipt í liti eftir flokksvali. Hæð á einum lit innan súlu sýnir hlutfall fólks í þeim hópi sem kaus þann flokk.
+
+```{r plot-vs-target-fn}
+FLOKKUR_ORDER <- sort(unique(df$flokkur))
+
+plot_vs_target <- function(question) {
+  info  <- meta_idx[[question]]
+  dtype <- info$dtype
+  col   <- df[[question]]
+
+  if (dtype == "nominal") {
+    tab <- tibble(value = as.character(col), flokkur = df$flokkur) |>
+             count(value, flokkur) |>
+             group_by(value) |>
+             mutate(prop = n / sum(n)) |>
+             ungroup() |>
+             mutate(flokkur = factor(flokkur, levels = FLOKKUR_ORDER))
+    ggplot(tab, aes(x = value, y = prop, fill = flokkur)) +
+      geom_col(width = 0.85) +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+      scale_fill_manual(values = class_colors, drop = FALSE) +   # staflar litaðir eftir flokki
+      labs(title = question, y = "Hlutfall innan hóps", x = NULL) +
+      theme_iskos_legend() +
+      theme(
+        legend.title    = element_text(size = 8),
+        legend.text     = element_text(size = 7),
+        axis.title.y    = element_text(size = 9, colour = text_color),
+        axis.text.x     = element_text(angle = 30, hjust = 1)
+      )
+  } else {
+    d <- df |>
+      mutate(flokkur = factor(flokkur, levels = FLOKKUR_ORDER)) |>
+      dplyr::filter(.data[[question]] != -1)
+    means <- d |>
+      group_by(flokkur) |>
+      summarise(mean_val = mean(.data[[question]]), .groups = "drop")
+    ggplot(d, aes(y = flokkur, x = .data[[question]])) +
+      geom_boxplot(fill = bar_color, alpha = 0.55, colour = text_color,
+                   outlier.size = 1.0, width = 0.55, linewidth = 0.4) +
+      geom_point(data = means, aes(x = mean_val, y = flokkur),
+                 shape = 18, size = 3.5, colour = "black") +
+      labs(title = question, x = NULL, y = NULL) +
+      theme_iskos() +
+      theme(axis.title = element_blank())
+  }
+}
+
+plot_vs_target("Kyn svaranda (karl/kona/kvár)")
+```
+
+## 5. `lrscale` sem raðbreytudæmi
+
+Fyrir raðbreytur sýnum við **kassagraf** (boxplot) eitt fyrir hvern flokk: kassinn nær frá 1. til 3. fjórðungsmarka (IQR), lóðrétt strik er miðgildi, og **svartur tígull** merkir meðaltalið. Dílarnir til hliðar sýna útbreiðsluna á stökum sem teljast útlagar (e. outliers). Ef kassarnir og tíglarnir liggja á mismunandi stöðum á x-ásnum þýðir það að breytan skilur flokka að.
+
+```{r lrscale-example, fig.height=4}
+plot_vs_target("Eigin staðsetning á vinstri-hægri kvarða")
+```
+
+## 6. Sama rökfræði á allar breytur
+
+```{r vs-target-loop, fig.width=9, fig.height=4}
+for (q in meta$label) {
+  print(plot_vs_target(q))
+}
+```

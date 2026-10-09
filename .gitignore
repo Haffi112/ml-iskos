@@ -1,0 +1,45 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# OS metadata
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Survey data and anything derived from it at the respondent level: never commit
+# (ÍSKOS data-use terms). Obtain the data from ÍSKOS and run 00_preprocess.
+Kjósendakönnun/
+*.sav
+data/iskos_clean.csv
+data/processed/
+models/
+
+# Generated figures and rendered R Markdown (reproducible from the notebooks)
+figures/
+notebooks_simplified_r/*.html
+notebooks_simplified_r/*_files/
+
+# Manuscripts, correspondence and review material
+*.doc
+*.docx
+*.odt
+*.msg
+*.pdf
+attachments/
+Skil_*/
+
+# Internal working notes and superseded notebook generators
+docs/plans/
+scripts/build_simplified/
+
+# Local tooling
+.claude/

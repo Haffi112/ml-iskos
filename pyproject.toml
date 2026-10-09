@@ -1,0 +1,21 @@
+[project]
+name = "iskos-2024-ml"
+version = "0.1.0"
+description = "Vote-choice prediction for the 2024 Alþingi election (ÍSKOS 2024) — companion code for a book chapter."
+requires-python = ">=3.12"
+dependencies = [
+    "autogluon-tabular[all]>=1.3.1",
+    "graphviz>=0.21",
+    "ipykernel>=7.2.0",
+    "joblib>=1.5.3",
+    "jupyterlab>=4.5.6",
+    "matplotlib>=3.10.8",
+    "nbconvert>=7.17.1",
+    "numpy<2.3",
+    "pandas<2.4",
+    "pyarrow>=23.0.1",
+    "pyreadstat>=1.3.3",
+    "scikit-learn<1.8",
+    "seaborn>=0.13.2",
+    "shap>=0.51.0",
+]

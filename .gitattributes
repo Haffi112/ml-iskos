@@ -1,0 +1,2 @@
+# Strip notebook outputs on commit (see scripts/strip_notebook_outputs.py)
+*.ipynb filter=nbstrip

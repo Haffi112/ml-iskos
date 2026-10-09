@@ -1,0 +1,298 @@
+---
+title: "ÍSKOS 2024 — 00. Forvinnsla (R)"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.align = "left"
+)
+```
+
+Markmið þessarar vinnubókar er einfalt: lesa SPSS-skrá ÍSKOS 2024, einangra svarendur í **ÍsKos-bálknum** (n ≈ 1193), búa til markmiðsbreytuna `flokkur` og vista hreina CSV-skrá sem næstu vinnubækur lesa.
+
+Við látum hópa 4 (málefnaeign) og 5 (flokkshollusta og leiðtogar) fljóta með í CSV-skránni þó að við sleppum þeim í líkanavinnubókinni — það er gert vísvitandi svo þú getir prófað sjálf(ur) að bæta þeim aftur við og séð hvernig **leakage** kemur fram.
+
+```{r paths}
+library(haven)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(stringr)
+
+PROJECT     <- normalizePath("..")
+DATA_PATH   <- file.path(PROJECT, "Kjósendakönnun",
+                         "ÍSKOS kjósenda 2024",
+                         "ISKOS2024_med_aukabreytum_20260318.sav")
+GROUPS_PATH <- file.path(PROJECT, "iskos24_breytuflokkun.csv")
+OUT_DIR     <- file.path(PROJECT, "data")
+dir.create(OUT_DIR, showWarnings = FALSE, recursive = TRUE)
+
+cat("DATA_PATH exists:",   file.exists(DATA_PATH),   "\n")
+cat("GROUPS_PATH exists:", file.exists(GROUPS_PATH), "\n")
+```
+
+## 1. Lesum .sav-skrána
+
+`haven::read_sav()` les SPSS-skrá og heldur sjálfvirkt utan um:
+
+- gildakóða og íslensk gildaheiti (`labelled` dálkar)
+- SPSS sérstöku "user-missing" kóða (`tagged_na`) — sem við breytum sjálf í tölulega kóða svo ákvörðunartré geti klofið á þeim.
+
+```{r read-sav}
+df_raw <- read_sav(DATA_PATH, user_na = TRUE)
+cat("Hrá gögn:", nrow(df_raw), "svarendur,", ncol(df_raw), "breytur\n")
+```
+
+## 2. Síum á ÍsKos-bálkinn
+
+Breytan `module` gefur til kynna hvaða spurningalisti var lagður fyrir hvern svaranda — `1 = CSES`, `2 = ÍsKos`, `3 = bæði`. Við viljum eingöngu þá sem fengu ÍsKos-spurningalistann.
+
+```{r filter-module}
+df <- df_raw |> dplyr::filter(as.integer(module) == 2)
+cat("Eftir síun á module==2 (ÍsKos):", nrow(df), "svarendur\n")
+```
+
+## 3. Byggjum markmiðið `flokkur`
+
+Markmiðsbreytan er svarið við spurningunni *„Hvern kaust þú?"* (`prtvote24`). Við:
+
+1. **Sleppum** þeim sem kusu ekki, neituðu, skiluðu auðu eða kusu örflokk.
+2. **Sameinum** V + P + J í einn hóp `„Vinstri (sameinað)"`.
+3. **Þýðum** tölulegu kóðana í íslensk flokksheiti.
+
+```{r build-target}
+# Codes to drop and to merge into "Vinstri (sameinað)"
+DROP_CODES <- c(0, 13, 990, 992, 993, 997, 998)
+LEFT_MERGE <- c(4, 6, 12)
+
+# `prtvote24` is labelled; pull both numeric codes and the value-label dict
+vote_labels <- attr(df$prtvote24, "labels")
+# vote_labels is a named numeric vector: c(`Samfylkinguna (S)` = 1, ...)
+vote_labels_lookup <- setNames(names(vote_labels), as.integer(vote_labels))
+
+to_flokkur <- function(code) {
+  if (is.na(code)) return(NA_character_)
+  c <- as.integer(code)
+  if (c %in% DROP_CODES) return(NA_character_)
+  if (c %in% LEFT_MERGE) return("Vinstri (sameinað)")
+  vote_labels_lookup[[as.character(c)]]
+}
+
+df$flokkur <- vapply(as.numeric(df$prtvote24), to_flokkur, character(1))
+df <- df |> dplyr::filter(!is.na(flokkur))
+
+cat("Eftir að við héldum aðeins 7 flokkum:", nrow(df), "svarendur\n\n")
+print(table(df$flokkur))
+```
+
+## 4. Veljum breytur úr `iskos24_breytuflokkun.csv`
+
+CSV-skráin merkir hverja breytu með **hópi** og hvort hún var lögð fyrir í ÍsKos- og/eða CSES-bálkunum. Skráin er á `cp1252` kóðun — þurfum að segja R það beint.
+
+```{r read-groups}
+KEEP_GROUPS <- c(
+  "1 – Félagsleg staða",
+  "2 – Málefnaviðhorf",
+  "3 – Frammistaða stjórnvalda",
+  "4 – Málefnaeign",
+  "5 – Flokkshollusta og leiðtogar",
+  "6 - Viðhorf og hegðun",
+  "7 - Miðlar",
+  "8 - Hægri/Vinstri"
+)
+
+grp <- read_csv(
+  GROUPS_PATH,
+  locale = locale(encoding = "cp1252"),
+  show_col_types = FALSE
+) |>
+  mutate(
+    iskos  = trimws(toupper(as.character(iskos))) == "TRUE",
+    group2 = trimws(group2)
+  )
+
+feat_rows <- grp |> dplyr::filter(iskos, group2 %in% KEEP_GROUPS)
+features  <- feat_rows$variable
+cat("Höldum", length(features), "breytum úr ÍsKos\n")
+```
+
+## 5. Flokkum dtypes handvirkt
+
+Hverri breytu er úthlutað dtype: **nominal** (flokkabreyta) eða **ordinal** (raðbreyta/töluleg).
+
+```{r dtypes}
+NOMINAL <- c(
+  "elecdist", "gender", "rentown", "maritals", "medium",
+  "mipmtaskprt", "pidsupport3", "prtcls",
+  "bprteco", "bprtimm", "bprteurope", "bprtfamily", "bprtisencit",
+  "bprthealth", "bprtenvir", "bprtregpol", "bprtedu", "bprtequal",
+  "bprthouse",
+  # Employment-type questions: codes are sector/arrangement labels, not magnitudes.
+  "govpriv", "uniwindw"
+)
+
+dtype_for <- function(v) if (v %in% NOMINAL) "nominal" else "ordinal"
+table(sapply(features, dtype_for))
+```
+
+## 6. Vinnandi dæmi: endurkóðum `gender`
+
+Sumar breytur nota sérstaka kóða utan 995–999 fyrir „ekki svar" — t.d. `991 = „Þekkir ekki flokkinn"` í `prtfeel_*` eða `97 = „Neitar að svara"` í `bprtequal`. Í stað þess að halda lista af tölum, **þekkjum við þá á íslensku lýsingunni** sem fylgir hverri kóða.
+
+```{r missing-codes-and-gender-example}
+MISSING_LABEL_KEYWORDS <- c(
+  "ekki spurt", "á ekki við", "neitar",
+  "veit ekki", "brottfall", "þekkir ekki"
+)
+
+missing_codes_for <- function(var) {
+  lbls <- attr(df_raw[[var]], "labels")
+  if (is.null(lbls)) return(integer(0))
+  nm <- tolower(names(lbls))
+  hit <- vapply(nm, function(s) any(stringr::str_detect(s, MISSING_LABEL_KEYWORDS)), logical(1))
+  as.integer(unname(lbls[hit]))
+}
+
+value_labels_for <- function(var) {
+  lbls <- attr(df_raw[[var]], "labels")
+  if (is.null(lbls)) return(setNames(character(0), character(0)))
+  setNames(names(lbls), as.character(as.integer(lbls)))
+}
+
+cat("Hráir kóðar gender:", sort(unique(as.numeric(df$gender))), "\n")
+print(value_labels_for("gender"))
+cat("Missing codes for gender:", missing_codes_for("gender"), "\n")
+```
+
+## 7. Sama rökfræði á allar breytur
+
+- **Nominal:** kóði → íslenskt textaheiti. Missing-kóðar → `„Ekki svarað"`.
+- **Ordinal:** kóði → heiltala. Missing-kóðar → `-1` (negative sentinel).
+
+```{r recode-loop}
+recoded <- list(flokkur = df$flokkur)
+
+for (var in features) {
+  dtype  <- dtype_for(var)
+  vlbl   <- value_labels_for(var)
+  miss   <- missing_codes_for(var)
+  raw    <- as.numeric(df[[var]])
+
+  if (dtype == "nominal") {
+    recoded[[var]] <- vapply(raw, function(code) {
+      if (is.na(code)) return("Ekki svarað")
+      ci <- as.integer(code)
+      if (ci %in% miss) return("Ekki svarað")
+      lbl <- vlbl[[as.character(ci)]]
+      if (is.null(lbl)) return(as.character(ci))
+      lbl
+    }, character(1))
+  } else {
+    recoded[[var]] <- vapply(raw, function(code) {
+      if (is.na(code)) return(-1L)
+      ci <- as.integer(code)
+      if (ci %in% miss) return(-1L)
+      ci
+    }, integer(1))
+  }
+}
+
+clean <- as_tibble(recoded)
+cat("Lokastærð:", nrow(clean), "x", ncol(clean), "\n")
+head(clean)
+```
+
+## 8. Endurnefnum dálka — íslenskar spurningar í stað stuttra breytuheita
+
+```{r rename-cols}
+rename_map <- setNames(feat_rows$label, feat_rows$variable)
+
+stopifnot(length(unique(rename_map)) == length(rename_map))  # no dupes
+
+# rename only the feature columns; keep `flokkur` as-is
+new_names <- colnames(clean)
+hits <- match(new_names, names(rename_map))
+new_names[!is.na(hits)] <- rename_map[hits[!is.na(hits)]]
+colnames(clean) <- new_names
+
+colnames(clean)[1:5]
+```
+
+## 9. Vistum hreinu CSV-skrána og lýsigögn
+
+```{r save}
+# Preserve any hand-curated short_label values from a previous run of this notebook.
+# Without this, re-running preprocess would wipe the short forms NB03's SHAP plots rely on.
+prev_meta_path <- file.path(OUT_DIR, "feature_meta.csv")
+prev_short <- setNames(character(0), character(0))
+if (file.exists(prev_meta_path)) {
+  prev <- tryCatch(readr::read_csv(prev_meta_path, show_col_types = FALSE),
+                   error = function(e) NULL)
+  if (!is.null(prev) && "short_label" %in% colnames(prev)) {
+    prev_short <- setNames(
+      ifelse(is.na(prev$short_label), "", prev$short_label),
+      prev$short_name
+    )
+  }
+}
+short_label_for <- function(v) {
+  s <- prev_short[v]
+  if (is.na(s) || is.null(s)) "" else unname(s)
+}
+
+meta_df <- tibble(
+  short_name  = feat_rows$variable,
+  label       = feat_rows$label,
+  # `short_label` is used by NB03's SHAP plots to keep axis labels readable.
+  # Preserved from previous feature_meta.csv when present; default empty otherwise →
+  # NB03 falls back to the full Icelandic question in `label`.
+  short_label = vapply(feat_rows$variable, short_label_for, character(1)),
+  group       = trimws(feat_rows$group2),
+  dtype       = vapply(feat_rows$variable, dtype_for, character(1))
+)
+
+readr::write_csv(clean,   file.path(OUT_DIR, "iskos_clean.csv"))
+readr::write_csv(meta_df, file.path(OUT_DIR, "feature_meta.csv"))
+
+# --- Value-label sidecar for NB03 figures (Mynd 1, Mynd 4) ---
+# Map each ordinal feature's numeric code → human-readable Icelandic answer text
+# (e.g. 4 → "frekar óæskilegt"). Keyed by Icelandic question text so plotting code
+# can look it up by column name. Missing-style codes get folded into "Ekki svarað".
+value_labels_out <- list()
+for (i in seq_len(nrow(feat_rows))) {
+  var   <- feat_rows$variable[i]
+  label <- feat_rows$label[i]
+  if (dtype_for(var) != "ordinal") next
+  vlbl <- value_labels_for(var)
+  miss <- missing_codes_for(var)
+  code_to_text <- vlbl[!(as.integer(names(vlbl)) %in% miss)]
+  if (length(code_to_text) == 0) next
+  ctt <- as.list(code_to_text)
+  ctt[["-1"]] <- "Ekki svarað"
+  value_labels_out[[label]] <- ctt
+}
+jsonlite::write_json(value_labels_out,
+                     file.path(OUT_DIR, "value_labels.json"),
+                     auto_unbox = TRUE, pretty = TRUE)
+
+cat("Vistað:\n")
+cat(" ", file.path(OUT_DIR, "iskos_clean.csv"),   "\n")
+cat(" ", file.path(OUT_DIR, "feature_meta.csv"),  "\n")
+cat(" ", file.path(OUT_DIR, "value_labels.json"), sprintf("  (%d ordinal variables)\n",
+    length(value_labels_out)))
+```
+
+## 10. Lokaeftirlit
+
+```{r sanity}
+cat("Flokksskipting:\n")
+print(sort(table(clean$flokkur), decreasing = TRUE))
+cat("\nDtype yfirlit:\n")
+print(table(meta_df$dtype))
+```

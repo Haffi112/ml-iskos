@@ -1,0 +1,176 @@
+variable,label,group,group2,module,iskos,cses
+ID,Númer svaranda,99 - ID,99 - ID,ÍSKOS OG CSES,TRUE,TRUE
+ResponseId,,99 - ID,99 - ID,,,
+ExternalReference,,99 - ID,99 - ID,,,
+ExternalReference2,,99 - ID,99 - ID,,,
+demweight,,98 - Drop,98 - Drop,,,
+polweight,,98 - Drop,98 - Drop,,,
+kjorsoknvigt,,98 - Drop,98 - Drop,,,
+dataset,,97 - Meta,97 - Meta,,,
+module,,97 - Meta,97 - Meta,,,
+intervnrday,,97 - Meta,97 - Meta,,,
+mode,,97 - Meta,97 - Meta,,,
+elecdist,Kjördæmi,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+area,,1 – Félagsleg staða,0 - Drop,,,
+urban,,1 – Félagsleg staða,0 - Drop,,,
+gender,Kyn svaranda (karl/kona/kvár),1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+yob,Fæðingarár svaranda,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+age,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+polintr,Áhugi á stjórnmálum,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS OG CSES,TRUE,TRUE
+pltrust,Traust til stjórnmálafólks,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS,TRUE,FALSE
+mimptask_24_10,,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,,,
+mipmtaskprt,Bestur flokkur til að leysa mikilvægasta verkefni,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+medtime,Tími varið í fréttir í kosningabaráttunni,7 - Miðlar,7 - Miðlar,ÍSKOS OG CSES,TRUE,TRUE
+medium,Miðill notaður mest til frétta,7 - Miðlar,7 - Miðlar,ÍSKOS OG CSES,TRUE,TRUE
+pidsupport1,Lítur á sig sem stuðningsmann flokks,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS,TRUE,FALSE
+pidsupport3,Hvaða flokkur (ÍSKOS flokkshollusta),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS,TRUE,FALSE
+prtcls,Stendur einhverjum flokki svolítið nær,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS,TRUE,FALSE
+prtclsorig,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+voteimp,Skipti máli hvern fólk kýs,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+govprfm,Frammistaða ríkisstjórnar (VG–D–B) síðustu þrjú ár,3 – Frammistaða stjórnvalda,3 – Frammistaða stjórnvalda,ÍSKOS OG CSES,TRUE,TRUE
+govprfmCov,Frammistaða ríkisstjórnar í COVID-faraldrinum,3 – Frammistaða stjórnvalda,3 – Frammistaða stjórnvalda,CSES,FALSE,TRUE
+ecobettwors_1,Efnahagsástand á Íslandi síðustu 12 mánuði,3 – Frammistaða stjórnvalda,3 – Frammistaða stjórnvalda,ÍSKOS OG CSES,TRUE,TRUE
+EUmship,Æskilegt að Ísland gangi í ESB,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+envirimp,Umhverfisaðgerðir á móti atvinnusköpun,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+gincdif,Ríkið eigi að jafna dreifingu tekna,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+taxreduc,Skatta ætti að minnka þrátt fyrir niðurskurð,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+capicntry,Draga úr viðgangi höfuðborgar til að auka velmegun á landsbyggð,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+ceqvote,Öll atkvæði eigi að gilda jafnt við úthlutun þingsæta,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+privhealth,Stefnt að auknum einkarekstri í heilbrigðisþjónustu,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+imueclt,Innflytjendur séu ógn við þjóðareinkenni,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+essfull,EES-samningurinn ógnar fullveldi Íslands,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+femfight,Barátta femínista gegn kynbundnu ofbeldi gengið of langt,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+banks,Viðskiptabankar eigi að vera í einkaeigu,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+immrght,Innflytjendur eigi jafnan rétt til félagslegs húsnæðis,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+genconsind,Ríkisstjórn eigi að leggja áherslu á orkufrek? stóriðju,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+acrproimp,Rýmka innflutning á landbúnaðarafurðum,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+drugpol,Afglæpavæðing neysluskammta fíkniefna,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+gndequ,Jafnrétti kynja gengið of langt,2 – Málefnaviðhorf,2 – Málefnaviðhorf,ÍSKOS,TRUE,FALSE
+envirimptest,Umhverfisaðgerðir á móti atvinnusköpun (CSES),2 – Málefnaviðhorf,2 – Málefnaviðhorf,CSES,FALSE,TRUE
+gincdiftest,Ríkið eigi að jafna dreifingu tekna (CSES),2 – Málefnaviðhorf,2 – Málefnaviðhorf,CSES,FALSE,TRUE
+taxreductest,Skatta ætti að minnka þrátt fyrir niðurskurð (CSES),2 – Málefnaviðhorf,2 – Málefnaviðhorf,CSES,FALSE,TRUE
+ceqvotetest,Öll atkvæði eigi að gilda jafnt (CSES),2 – Málefnaviðhorf,2 – Málefnaviðhorf,CSES,FALSE,TRUE
+capicntrytest,Draga úr viðgangi höfuðborgar (CSES),2 – Málefnaviðhorf,2 – Málefnaviðhorf,CSES,FALSE,TRUE
+prtfeel_FF,Líkar við Flokk fólksins (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_B,Líkar við Framsóknarflokkinn (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_M,Líkar við Miðflokkinn (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_P,Líkar við Pírata (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_S,Líkar við Samfylkinguna (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_D,Líkar við Sjálfstæðisflokkinn (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_C,Líkar við Viðreisn (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_V,Líkar við Vinstri-græn (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+prtfeel_J,Líkar við Sósialistaflokkinn (0–10),5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,ÍSKOS OG CSES,TRUE,TRUE
+ldrfeel_KF,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_SIJ,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_BB,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_SS,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_SDG,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_TSA,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_TKG,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_IS,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+ldrfeel_SMM,,5 – Flokkshollusta og leiðtogar,5 – Flokkshollusta og leiðtogar,,,
+lrscale_FF,Vinstri-hægri staðsetning Flokks fólksins,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_B,Vinstri-hægri staðsetning Framsóknarflokksins,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_M,Vinstri-hægri staðsetning Miðflokksins,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_P,Vinstri-hægri staðsetning Pírata,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_S,Vinstri-hægri staðsetning Samfylkingarinnar,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_D,Vinstri-hægri staðsetning Sjálfstæðisflokksins,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_C,Vinstri-hægri staðsetning Viðreisnar,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_V,Vinstri-hægri staðsetning Vinstri-grænna,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale_J,Vinstri-hægri staðsetning Sósialistaflokksins,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+lrscale,Eigin staðsetning á vinstri-hægri kvarða,8 - Hægri/Vinstri,8 - Hægri/Vinstri,ÍSKOS OG CSES,TRUE,TRUE
+democr,Ánægja með lýðræðið á Íslandi,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS OG CSES,TRUE,TRUE
+civicvote,Kjósa er samfélagsleg skylda eða frjálst val,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS,TRUE,FALSE
+pltscrp,Útbreiðsla spillingar meðal stjórnmálamanna,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS,TRUE,FALSE
+pidclose1,Stendur nærri sérstökum flokki (CSES),0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+pidclose2,,0 - Drop,0 - Drop,,,
+pidclose3,,0 - Drop,0 - Drop,,,
+pidsymp1,,0 - Drop,0 - Drop,,,
+pidsymp2,,0 - Drop,0 - Drop,,,
+pidsymp3,,0 - Drop,0 - Drop,,,
+mmbprt,Meðlimur í stjórnmálaflokki,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS,TRUE,FALSE
+mmbprt_S,,0 - Drop,0 - Drop,,,
+mmbprt_B,,0 - Drop,0 - Drop,,,
+mmbprt_D,,0 - Drop,0 - Drop,,,
+mmbprt_V,,0 - Drop,0 - Drop,,,
+mmbprt_P,,0 - Drop,0 - Drop,,,
+mmbprt_C,,0 - Drop,0 - Drop,,,
+mmbprt_M,,0 - Drop,0 - Drop,,,
+mmbprt_F,,0 - Drop,0 - Drop,,,
+mmbprt_J,,0 - Drop,0 - Drop,,,
+mmbprt_L,,0 - Drop,0 - Drop,,,
+mmbprt_Y,,0 - Drop,0 - Drop,,,
+vote24,,0 - Drop,0 - Drop,,,
+prtvote24,,9 - Flokksval,9 - Flokksval,,,
+blankinv,Ánægja með þá ákvörðun að greiða auðan seðil,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+votesat,Ánægja með úrslit kosninga,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+nvotesat,Ánægja með þá ákvörðun að kjósa ekki,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+votevar,Ánægja með þá ákvörðun að kjósa annan flokk en venjulega,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+votefair,Mat á hversu sanngjarnar kosningarnar voru,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+hldecvote,Hvenær var endanleg ákvörðun um flokksval tekin,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,ÍSKOS,TRUE,FALSE
+fvote21,,0 - Drop,0 - Drop,,,
+prtfvote21,,0 - Drop,0 - Drop,,,
+bprteco,Bestur flokkur í efnahagsmálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtimm,Bestur flokkur í innflytjendamálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprteurope,Bestur flokkur í Evrópumálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtfamily,Bestur flokkur í fjölskyldu- og barnamálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtisencit,Bestur flokkur í málefnum eldri borgara,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprthealth,Bestur flokkur í heilbrigðismálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtenvir,Bestur flokkur í umhverfismálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtregpol,Bestur flokkur í byggðamálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtedu,Bestur flokkur í menntamálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprtequal,Bestur flokkur í jafnréttismálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+bprthouse,Bestur flokkur í húsnæðismálum,4 – Málefnaeign,4 – Málefnaeign,ÍSKOS,TRUE,FALSE
+medruv,Horfði á fréttir RÚV í kosningabaráttunni,7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+medchtwo,Horfði á fréttir Stöðvar 2 í kosningabaráttunni,7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+medradio,Hlustað á fréttir í útvarpi í kosningabaráttunni,7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+medpaper,Las dagblöð í kosningabaráttunni,7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+medweb,Fór á fréttasíður á netinu í kosningabaráttunni,7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+medsoc,Notaði samfélagsmiðla í kosningabaráttunni (dagar/viku),7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+medsocfre,Tíðni notkunar samfélagsmiðla á dæmigerðum degi,7 - Miðlar,7 - Miðlar,CSES,FALSE,TRUE
+inteff,Skilur mikilvægustu pólitísku málefnin,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+dembest,Lýðræði er alltaf betra en aðrar stjórnarfyrirkomulag,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+courts,Dómstólar eigi að geta stöðvað stjórnvöld,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+leadrul,Gott að hafa sterkan leiðtoga jafnvel án þings,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+femequ,,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,,,
+leadbus,Viðskiptamenn ættu að stjórna í stað kjörinna fulltrúa,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+leadexp,Sérfræðingar ættu að stjórna í stað kjörinna fulltrúa,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+leadciti,Borgarar ættu að stjórna í stað kjörinna fulltrúa,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+demqual,Gæði lýðræðis á Íslandi (0–10),6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+trustparl,Traust til Alþingis,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+trustgov,Traust til ríkisstjórnarinnar,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+trustjud,Traust til dómstólanna,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+trustexp,Traust til vísindamanna,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+trustprt,Traust til stjórnmálaflokka,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+trustmed,Traust til hefðbundinna fjölmiðla,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+trustsocmed,Traust til samfélagsmiðla,6 - Viðhorf og hegðun,0 - Drop,CSES,FALSE,TRUE
+femrep,Aðgerðir til að auka hlut kvenna í stjórnmálum,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+covgen,Karlar eða konur betur til að stjórna á tímum heilbrigðiskrísu,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+ecogen,Karlar eða konur betur til að stjórna á tímum efnahagskrísu,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+healthc,Stjórnmálakerfið tryggir fullnægjandi heilbrigðisþjónustu,6 - Viðhorf og hegðun,6 - Viðhorf og hegðun,CSES,FALSE,TRUE
+covsoc,Áhrif COVID á samheldni almennings,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+covdem,Áhrif COVID á virki lýðræðis,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+covfin,Áhrif COVID á persónulega fjárhagsstöðu,0 - Drop,0 - Drop,CSES,FALSE,TRUE
+covsick,Smitað af COVID (svarandinn eða heimilisfólk),0 - Drop,0 - Drop,ÍSKOS,TRUE,FALSE
+rentown,"Búseta í eigin húsnæði, leigu eða annars",1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+pjob,Staða á vinnumarkaði,0 - Drop,0 - Drop,ÍSKOS OG CSES,TRUE,TRUE
+njob,,0 - Drop,0 - Drop,,,
+emplstatus,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+mainjobflo,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+uniwindw,Launþegi eða sjálfstæður atvinnurekandi,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+govpriv,Starfar hjá hinu opinbera eða einkarekstri,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+educationflo,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+unmmb,Meðlimur í stéttafélagi,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+maritals,Hjúskaparstaða,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+manadartekjur,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+incomecate,,0 - Drop,0 - Drop,,,
+arstekjur,,0 - Drop,0 - Drop,,,
+hinctntyearcate,,0 - Drop,0 - Drop,,,
+hhmmb,Fjöldi heimilismanna,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+childs,Fjöldi barna 17 ára og yngri á heimilinu,1 – Félagsleg staða,1 – Félagsleg staða,ÍSKOS OG CSES,TRUE,TRUE
+race,Kynþáttur svaranda,1 – Félagsleg staða,1 – Félagsleg staða,CSES,FALSE,TRUE
+cntrybrncat,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+cntrybrnpar,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+languagecat,,1 – Félagsleg staða,1 – Félagsleg staða,,,
+church,Aðild að kirkju eða trúfélagi,1 – Félagsleg staða,1 – Félagsleg staða,CSES,FALSE,TRUE
+rlgatnd,Hve oft sótt guðsþjónustu,1 – Félagsleg staða,1 – Félagsleg staða,CSES,FALSE,TRUE

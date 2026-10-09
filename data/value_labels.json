@@ -1,0 +1,361 @@
+{
+  "Áhugi á stjórnmálum": {
+    "1": "Mjög mikinn áhuga",
+    "2": "Mikinn áhuga",
+    "3": "Nokkurn áhuga",
+    "4": "Lítinn áhuga",
+    "5": "Engan áhuga",
+    "-1": "Ekki svarað"
+  },
+  "Traust til stjórnmálafólks": {
+    "1": "Yfirleitt",
+    "2": "Mörgum",
+    "3": "Sumum",
+    "4": "Fáum",
+    "5": "Engum",
+    "-1": "Ekki svarað"
+  },
+  "Tími varið í fréttir í kosningabaráttunni": {
+    "1": "Engum",
+    "2": "Minna en 30 mínútum",
+    "3": "30-60 mínútum",
+    "4": "1 til 2 klukkustundum",
+    "5": "Meira en 2 klukkustundum",
+    "-1": "Ekki svarað"
+  },
+  "Lítur á sig sem stuðningsmann flokks": {
+    "1": "Já, lít á mig sem stuðningsmann flokks",
+    "2": "Nei, lít ekki á mig sem stuðningsmann neins flokks",
+    "-1": "Ekki svarað"
+  },
+  "Frammistaða ríkisstjórnar (VG–D–B) síðustu þrjú ár": {
+    "1": "Mjög vel",
+    "2": "Frekar vel",
+    "3": "Frekar illa",
+    "4": "Mjög illa",
+    "-1": "Ekki svarað"
+  },
+  "Efnahagsástand á Íslandi síðustu 12 mánuði": {
+    "1": "Batnað mjög mikið",
+    "2": "Batnað nokkuð",
+    "3": "Lítið breyst",
+    "4": "Versnað nokkuð",
+    "5": "Versnað mjög mikið",
+    "-1": "Ekki svarað"
+  },
+  "Æskilegt að Ísland gangi í ESB": {
+    "1": "Mjög æskilegt",
+    "2": "Frekar æskilegt",
+    "3": "Hlutlaus/óviss",
+    "4": "Frekar óæskilegt",
+    "5": "Mjög óæskilegt",
+    "-1": "Ekki svarað"
+  },
+  "Umhverfisaðgerðir á móti atvinnusköpun": {
+    "1": "Alveg sammála",
+    "2": "Frekar sammála",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar ósammála",
+    "5": "Alveg ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Ríkið eigi að jafna dreifingu tekna": {
+    "1": "Alveg sammála",
+    "2": "Frekar sammála",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar ósammála",
+    "5": "Alveg ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Skatta ætti að minnka þrátt fyrir niðurskurð": {
+    "1": "Alveg sammála",
+    "2": "Frekar sammála",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar ósammála",
+    "5": "Alveg ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Draga úr viðgangi höfuðborgar til að auka velmegun á landsbyggð": {
+    "1": "Alveg sammála",
+    "2": "Frekar sammála",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar ósammála",
+    "5": "Alveg ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Öll atkvæði eigi að gilda jafnt við úthlutun þingsæta": {
+    "1": "Alveg sammála",
+    "2": "Frekar sammála",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar ósammála",
+    "5": "Alveg ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Stefnt að auknum einkarekstri í heilbrigðisþjónustu": {
+    "1": "Mjög sammála",
+    "2": "Frekar sammála",
+    "3": "Hvorki sammála né ósammála",
+    "4": "Frekar ósammála",
+    "5": "Mjög ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Innflytjendur séu ógn við þjóðareinkenni": {
+    "1": "Mjög sammála",
+    "2": "Frekar sammála",
+    "3": "Hvorki sammála né ósammála",
+    "4": "Frekar ósammála",
+    "5": "Mjög ósammála",
+    "-1": "Ekki svarað"
+  },
+  "EES-samningurinn ógnar fullveldi Íslands": {
+    "1": "Mjög sammála",
+    "2": "Frekar sammála",
+    "3": "Hvorki sammála né ósammála",
+    "4": "Frekar ósammála",
+    "5": "Mjög ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Barátta femínista gegn kynbundnu ofbeldi gengið of langt": {
+    "1": "Mjög sammála",
+    "2": "Frekar sammála",
+    "3": "Hvorki sammála né ósammála",
+    "4": "Frekar ósammála",
+    "5": "Mjög ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Viðskiptabankar eigi að vera í einkaeigu": {
+    "1": "Mjög sammála",
+    "2": "Frekar sammála",
+    "3": "Hvorki sammála né ósammála",
+    "4": "Frekar ósammála",
+    "5": "Mjög ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Innflytjendur eigi jafnan rétt til félagslegs húsnæðis": {
+    "1": "Mjög sammála",
+    "2": "Frekar sammála",
+    "3": "Hvorki sammála né ósammála",
+    "4": "Frekar ósammála",
+    "5": "Mjög ósammála",
+    "-1": "Ekki svarað"
+  },
+  "Ríkisstjórn eigi að leggja áherslu á orkufrek? stóriðju": {
+    "1": "Mjög mikla áherslu",
+    "2": "Frekar mikla áherslu",
+    "3": "Nokkra áherslu",
+    "4": "Frekar litla áherslu",
+    "5": "Mjög litla áherslu (enga áherslu)",
+    "-1": "Ekki svarað"
+  },
+  "Rýmka innflutning á landbúnaðarafurðum": {
+    "1": "Mjög hlynnt(ur)",
+    "2": "Frekar hlynnt(ur)",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar andvíg(ur)",
+    "5": "Mjög andvíg(ur)",
+    "-1": "Ekki svarað"
+  },
+  "Afglæpavæðing neysluskammta fíkniefna": {
+    "1": "Mjög hlynnt(ur)",
+    "2": "Frekar hlynnt(ur)",
+    "3": "Skiptir ekki máli",
+    "4": "Frekar andvíg(ur)",
+    "5": "Mjög andvíg(ur)",
+    "-1": "Ekki svarað"
+  },
+  "Jafnrétti kynja gengið of langt": {
+    "1": "Gengið of langt",
+    "2": "Gengið helst til of langt",
+    "3": "Gengið hæfilega langt",
+    "4": "Gengið helst til of skammt",
+    "5": "Gengið alltof skammt",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Flokk fólksins (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Framsóknarflokkinn (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Miðflokkinn (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Pírata (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Samfylkinguna (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Sjálfstæðisflokkinn (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Viðreisn (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Vinstri-græn (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Líkar við Sósialistaflokkinn (0–10)": {
+    "0": "Líkar mjög illa við flokkinn 0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "Líkar mjög vel við flokkinn 10",
+    "-1": "Ekki svarað"
+  },
+  "Eigin staðsetning á vinstri-hægri kvarða": {
+    "0": "0 Vinstri",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "10": "10 Hægri",
+    "-1": "Ekki svarað"
+  },
+  "Ánægja með lýðræðið á Íslandi": {
+    "1": "Mjög ánægð(ur)",
+    "2": "Frekar ánægð(ur)",
+    "3": "Ekki mjög ánægð(ur)",
+    "4": "Alls ekki ánægð(ur)",
+    "-1": "Ekki svarað"
+  },
+  "Kjósa er samfélagsleg skylda eða frjálst val": {
+    "1": "1 Frjálst val hvers og eins kjósanda",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5 Samfélagsleg skylda hvers kjósanda",
+    "-1": "Ekki svarað"
+  },
+  "Útbreiðsla spillingar meðal stjórnmálamanna": {
+    "1": "Mjög útbreidda",
+    "2": "Frekar útbreidda",
+    "3": "Frekar lítið útbreidda",
+    "4": "Á sér varla stað",
+    "-1": "Ekki svarað"
+  },
+  "Meðlimur í stjórnmálaflokki": {
+    "1": "Já",
+    "2": "Nei",
+    "-1": "Ekki svarað"
+  },
+  "Hvenær var endanleg ákvörðun um flokksval tekin": {
+    "1": "Á kjördag",
+    "2": "Í vikunni fyrir kosningar",
+    "3": "Viku fyrir kosningar",
+    "4": "8-30 dögum fyrir kosningar",
+    "5": "Meira en mánuði fyrir kosningar",
+    "-1": "Ekki svarað"
+  },
+  "Meðlimur í stéttafélagi": {
+    "1": "Já",
+    "2": "Nei",
+    "-1": "Ekki svarað"
+  },
+  "Fjöldi heimilismanna": {
+    "10": "10 eða fleiri",
+    "-1": "Ekki svarað"
+  },
+  "Fjöldi barna 17 ára og yngri á heimilinu": {
+    "-1": "Ekki svarað"
+  }
+}
