@@ -36,6 +36,7 @@ notebooks_simplified_r/*_files/
 *.pdf
 attachments/
 Skil_*/
+Skil_*.zip
 
 # Internal working notes and superseded notebook generators
 docs/plans/
