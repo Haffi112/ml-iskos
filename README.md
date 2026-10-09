@@ -6,8 +6,7 @@ Höfundar kaflans eru Hafsteinn Birgir Einarsson og Hafsteinn Einarsson.
 Í kaflanum er vélnámi beitt á kjósendakönnun Íslensku kosningarannsóknarinnar (ÍSKOS) 2024 til að
 giska á hvaða flokk svarendur kusu út frá öðrum svörum þeirra í sömu könnun. Byrjað er á einföldum
 grunnlíkönum, síðan er þjálfað ákvörðunartré og loks slembiskógur (e. random forest). Til að skilja
-hvaða upplýsingar líkanið nýtir eru notaðir tveir mælikvarðar á mikilvægi breyta (Gini-mikilvægi og
-umröðunarmikilvægi) og SHAP-gildi fyrir einstakar spár.
+hvaða upplýsingar líkanið nýtir er notað umröðunarmikilvægi breyta og SHAP-gildi fyrir einstakar spár.
 
 Vinnubækurnar eru skrifaðar með lesendur bókarinnar í huga: skýringar eru á íslensku og hvert skref er
 útskýrt. Þú getur líka sett inn eigin svör og séð hvaða flokk líkanið telur líklegast að þú hafir kosið.
@@ -87,14 +86,14 @@ Keyrsla hvorrar keðju tekur fáeinar mínútur.
 - **Markbreyta:** flokksval í alþingiskosningunum 2024 í sjö flokkum: þingflokkarnir sex auk
   „Vinstri (sameinað)“, þar sem Sósíalistaflokkurinn, Píratar og Vinstri græn eru sameinuð. Þeir sem
   kusu ekki, skiluðu auðu, vildu ekki segja hvað þeir kusu eða kusu Lýðræðisflokkinn eru ekki með.
-- **Breytur:** 38 spurningar um félagslega stöðu (þar á meðal aldur og menntun), málefnaviðhorf, mat
-  á efnahagsástandi, stjórnmálaviðhorf og -hegðun, miðlanotkun og sjálfsstaðsetningu á vinstri-hægri
-  kvarða.
-- **Breytur sem er sleppt:** málefnaeign (hvaða flokkur er talinn bestur í tilteknum málaflokki),
-  flokkshollusta (þar á meðal hversu vel svaranda líkar við hvern flokk) og mat á frammistöðu
-  ríkisstjórnarinnar 2021–2024. Allar eru þær svo nátengdar flokksvalinu að þær segja lítið annað en
-  hvaða flokk svarandinn kaus. Breyttu `LEAK_GROUPS` og `EXCLUDE_VARS` í 02-vinnubókinni til að sjá
-  áhrifin af því að taka þær með.
+- **Breytur:** 39 breytur um félagslega stöðu (þar á meðal aldur og menntun), málefnaviðhorf, mat á
+  frammistöðu stjórnvalda (ríkisstjórnarinnar og efnahagsástandsins), stjórnmálaviðhorf og -hegðun,
+  miðlanotkun og sjálfsstaðsetningu á vinstri-hægri kvarða.
+- **Breytur sem er sleppt:** málefnaeign (hvaða flokkur er talinn bestur í tilteknum málaflokki) og
+  flokkshollusta (þar á meðal hversu vel svaranda líkar við hvern flokk). Þær eru svo nátengdar
+  flokksvalinu að þær segja lítið annað en hvaða flokk svarandinn kaus. Breyttu `LEAK_GROUPS` í
+  02-vinnubókinni til að sjá áhrifin af því að taka þær með, og `EXCLUDE_VARS` til að sleppa einstökum
+  breytum.
 - **Vantandi svör** eru sérstakt gildi: „Ekki svarað“ í flokkabreytum og −1 í raðbreytum. Enginn
   svarandi er felldur út vegna þeirra.
 - **Skipting:** lagskipt 80/20 skipting í þjálfunar- og prófunarmengi (806/206) með slembifræi 42.
@@ -116,12 +115,12 @@ til við keyrslu og fylgja ekki geymslunni.
 `scripts/robustness/robustness.R` endurtekur líkönin úr `02_models.Rmd` og skilar tölunum sem vísað er
 til í kaflanum: sömu skiptingu og í kaflanum, 50 endurteknar skiptingar, samanburð við fjölkosta
 lógistíska aðhvarfsgreiningu, líkön sem byggja aðeins á tveimur eða þremur spurningum og
-umröðunarmikilvægi. Keyrt úr rót verkefnisins eftir forvinnslu:
+umröðunarmikilvægi (ásamt Gini-mikilvægi til samanburðar). Keyrt úr rót verkefnisins eftir forvinnslu:
 
 ```bash
-Rscript scripts/robustness/robustness.R            # líkanið í kaflanum
-Rscript scripts/robustness/robustness.R with_gov   # með mati á frammistöðu ríkisstjórnarinnar
-Rscript scripts/robustness/robustness.R all        # allar breytur, líka málefnaeign og flokkshollusta
+Rscript scripts/robustness/robustness.R              # líkanið í kaflanum
+Rscript scripts/robustness/robustness.R without_gov  # án mats á frammistöðu ríkisstjórnarinnar
+Rscript scripts/robustness/robustness.R all          # allar breytur, líka málefnaeign og flokkshollusta
 ```
 
 ### Um endurtakanleika

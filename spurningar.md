@@ -6,7 +6,7 @@ Orðalag þeirra spurninga úr kjósendakönnun ÍSKOS 2024 sem líkanið í kaf
 
 **Flokksval** (`prtvote24`, spurning 74): „Kaust þú í alþingiskosningunum 30. nóvember síðastliðinn? (EF JÁ): Hvaða flokk eða lista kaust þú?“ Vinstri græn, Píratar og Sósíalistaflokkurinn eru sameinuð í einn flokk, „Vinstri (sameinað)“.
 
-Breytum úr hópunum málefnaeign og flokkshollusta, og mati á frammistöðu ríkisstjórnarinnar 2021–2024 (`govprfm`), er sleppt; sjá README.
+Breytum úr hópunum málefnaeign og flokkshollusta er sleppt; sjá README.
 
 ## 1 – Félagsleg staða
 
@@ -17,7 +17,7 @@ Breytum úr hópunum málefnaeign og flokkshollusta, og mati á frammistöðu r�
 | `age` | Aldur | Aukabreyta í gagnasafni ÍSKOS: aldur svaranda. |
 | `rentown` | Húsnæðisform | „Býrð þú í eigin húsnæði, í leiguhúsnæði, í foreldrahúsum eða hjá ættingjum eða býrð þú í annars konar húsnæði?“ (spurning 125) |
 | `uniwindw` | Launþegi eða sjálfstæður | „Ert þú/varst þú launþegi eða með sjálfstæðan atvinnurekstur?“ (spurning 129) |
-| `govpriv` | Opinber eða einkageiri | „Starfar/starfaðir þú hjá hinu opinbera (opinberri stofnun, opinberu fyrirtæki, sveitarfélagi), í einkageiranum eða annars staðar?“ (spurning 130) |
+| `govpriv` | Starfar hjá | „Starfar/starfaðir þú hjá hinu opinbera (opinberri stofnun, opinberu fyrirtæki, sveitarfélagi), í einkageiranum eða annars staðar?“ (spurning 130) |
 | `educationflo` | Menntun | Aukabreyta í gagnasafni ÍSKOS: menntun svaranda, flokkuð í níu stig auk „annað“. |
 | `unmmb` | Stéttarfélagsaðild | „Ert eða varst þú þú meðlimur í stéttafélagi?“ (spurning 132) |
 | `maritals` | Hjúskaparstaða | „Hver er hjúskaparstaða þín í dag?“ (spurning 133) |
@@ -45,10 +45,11 @@ Breytum úr hópunum málefnaeign og flokkshollusta, og mati á frammistöðu r�
 | `drugpol` | Afglæpavæðing fíkniefna | „Ertu hlynnt/ur eða andvíg/t/ur afglæpavæðingu neysluskammta fíkniefna?“ (spurning 35) |
 | `gndequ` | Jafnrétti of langt gengið | „Ef við hugum að tilraunum til að tryggja konum jafna stöðu við karla, finnst þér þessi þróun hafa gengið of langt, hæfilega langt eða of skammt?“ (spurning 36) |
 
-## 3 – Mat á efnahagsástandi
+## 3 – Frammistaða stjórnvalda
 
 | Breyta | Stutt heiti | Orðalag |
 |---|---|---|
+| `govprfm` | Mat á ríkisstjórn | „Hversu vel eða illa finnst þér ríkisstjórn Vinstrihreyfingarinnar græns framboðs, Sjálfstæðisflokks og Framsóknarflokks hafi staðið sig undanfarin þrjú ár? Finnst þér hún hafa staðið sig mjög vel, frekar vel, frekar illa eða mjög illa?“ (spurning 13) |
 | `ecobettwors_1` | Mat á efnahagsástandi | „Myndirðu segja að á síðustu 12 mánuðum hafi efnahagsástandið á Íslandi batnað mjög mikið, batnað nokkuð, lítið breyst, versnað nokkuð eða versnað mjög mikið?“ (spurning 15) |
 
 ## 6 - Viðhorf og hegðun

@@ -51,7 +51,7 @@ cat(nrow(df), "svarendur ·", ncol(df) - 1, "breytur\n")
 
 Hópur **4 (Málefnaeign)** og hópur **5 (Flokkshollusta og leiðtogar)** spyrja í raun *„hver er flokkurinn þinn?"* með óbeinum hætti — t.d. *„hvaða flokkur er bestur í efnahagsmálum?"* eða *„hversu vel líkar þér við Sjálfstæðisflokkinn (0–10)?"*. Ef við setjum þessar breytur inn í líkanið mun nákvæmnin hækka — en það er **leakage**, ekki forspá.
 
-Sama gildir að hluta um **mat á frammistöðu ríkisstjórnarinnar** (`govprfm`). Ríkisstjórnin 2021–2024 var skipuð VG, Sjálfstæðisflokki og Framsóknarflokki, svo spurningin *„hversu vel stóð ríkisstjórnin sig?"* er nátengd því hvort svarandi kaus stjórnarflokk. Við sleppum henni því líka, eins og gert er í kaflanum í bókinni.
+**Mat á frammistöðu ríkisstjórnarinnar** (`govprfm`) höfum við hins vegar með. Það er mat á störfum ríkisstjórnarinnar, eins og breytuhópurinn „frammistaða stjórnvalda“ í fyrri rannsóknum á íslenskum kjósendum, en ekki óbein spurning um hvaða flokk svarandinn kaus. Viljirðu sjá hvað gerist ef henni er sleppt, settu `EXCLUDE_VARS <- c("govprfm")`.
 
 **Prufaðu sjálf(ur):** breyttu `LEAK_GROUPS` og/eða `EXCLUDE_VARS` í tóma vektorinn `character(0)` og keyrðu vinnubókina aftur. Nákvæmni slembiskógarins hækkar verulega þegar leakage-hóparnir eru teknir með — það er gervihækkun sem byggir á eiginleikum sem eru of nálægt markmiðinu.
 
@@ -59,10 +59,10 @@ Sama gildir að hluta um **mat á frammistöðu ríkisstjórnarinnar** (`govprfm
 LEAK_GROUPS <- c("4 – Málefnaeign", "5 – Flokkshollusta og leiðtogar")
 # LEAK_GROUPS <- character(0)   # ← uncomment to include leakage groups
 
-# Single variables left out for the same reason: evaluation of the outgoing VG–D–B
-# government is closely tied to whether the respondent voted for a governing party.
-EXCLUDE_VARS <- c("govprfm")
-# EXCLUDE_VARS <- character(0)  # ← uncomment to put government performance back in
+# Single variables can also be left out, e.g. c("govprfm") (evaluation of the outgoing
+# VG–D–B government). The chapter keeps every variable outside groups 4 and 5.
+EXCLUDE_VARS <- character(0)
+# EXCLUDE_VARS <- c("govprfm")  # ← uncomment to see the model without government performance
 
 leak_vars <- meta |>
   dplyr::filter(group %in% LEAK_GROUPS | short_name %in% EXCLUDE_VARS) |>
@@ -149,7 +149,7 @@ cat(sprintf("Grunnt tré – train: %.3f  test: %.3f\n",
 
 ### Trésmyndin (Mynd 8.1 í bókinni)
 
-Við notum `rpart.plot` til að fá lesanlega íslenska mynd. Í hverjum kassa er **spáður flokkur** (algengasti flokkurinn í hnútnum), **hlutfall** svarenda í hnútnum sem kaus þann flokk og **fjöldi** svarenda úr þjálfunarmenginu. Í innri hnútum kemur spurningin sem tréð skiptir eftir; þau sem svara „já“ fara til vinstri.
+Við notum `rpart.plot` til að fá lesanlega íslenska mynd. Í hverjum kassa er **spáður flokkur** (algengasti flokkurinn í hnútnum) og **fjöldi** svarenda úr þjálfunarmenginu, og þar fyrir neðan hve margir þeirra kusu hvern flokk (listabókstafir, V = Vinstri (sameinað)). Í innri hnútum kemur spurningin sem tréð skiptir eftir; þau sem svara „já“ fara til vinstri.
 
 ```{r dt-plot, fig.width=8.5, fig.height=5.4}
 # Ljós blær af flokkslitnum með dökkum texta og rönd í fullum flokkslit (sjá iskos_tint()).
@@ -181,7 +181,7 @@ value_labels <- jsonlite::fromJSON(file.path(DATA, "value_labels.json"), simplif
 #   * Numeric/ordinal (ncat == -1 or 1): every feature is integer-coded, so x.5 thresholds are
 #     rewritten as strict integer comparisons (value < 6.5  <=>  value < 7).
 #   * Categorical (ncat > 1): rpart stores the split in dt$csplit with a 1/3 code per level
-#     (1 = goes left). We list the left ("já") levels as "X = a eða b"; the ∈ glyph is missing
+#     (1 = goes left). We list the left ("já") levels as "X: a eða b"; the ∈ glyph is missing
 #     from common fonts and renders as an empty box.
 format_split_rule <- function(varname, thr, ncat) {
   if (ncat > 1) {
@@ -191,7 +191,8 @@ format_split_rule <- function(varname, thr, ncat) {
     if (length(left_levels) == 0) return(shorten(varname))
     rhs <- if (length(left_levels) <= 2) paste(left_levels, collapse = " eða ") else
       sprintf("%s, … (%d gildi)", paste(head(left_levels, 2), collapse = ", "), length(left_levels))
-    return(sprintf("%s = %s", shorten(varname), rhs))
+    # "Starfar hjá: félaga- eða hagsmunasamtökum?" reads as a question about the respondent.
+    return(sprintf("%s: %s", shorten(varname), tolower(substr(rhs, 1, 1)) |> paste0(substring(rhs, 2))))
   }
   is_half <- abs(thr - round(thr)) > 1e-9
   if (ncat == -1) {
@@ -222,12 +223,22 @@ for (k in seq_along(nonleaf_rows)) {
                                               dt$splits[r, "index"], dt$splits[r, "ncat"])
 }
 
-# Box text: party (nominative), its share in the node and the node size. The question asked
-# at each inner node is drawn just below its box (split.fun); "já" goes left, "nei" right.
-wrap_lines  <- function(s, width = 30) paste(strwrap(s, width = width), collapse = "\n")
+# Box text: predicted party (nominative) and node size, then how many respondents in the node
+# voted for each party (party letters, largest first), so readers can see how mixed each node is.
+# The question asked at each inner node is drawn just below its box (split.fun); "já" goes left.
+wrap_lines   <- function(s, width = 30) paste(strwrap(s, width = width), collapse = "\n")
+party_letter <- c("Samfylkinguna (S)" = "S", "Sjálfstæðisflokkinn (D)" = "D", "Viðreisn (C)" = "C",
+                  "Framsóknarflokkinn (B)" = "B", "Miðflokkinn (M)" = "M", "Flokk fólksins (F)" = "F",
+                  "Vinstri (sameinað)" = "V")
+count_lines <- function(i) {
+  cnt <- setNames(as.integer(counts_mat[i, ]), party_letter[classes_order])
+  cnt <- sort(cnt[cnt > 0], decreasing = TRUE)
+  items <- sprintf("%s %d", names(cnt), cnt)
+  if (length(items) <= 4) return(paste(items, collapse = " · "))
+  paste(paste(items[1:4], collapse = " · "), paste(items[-(1:4)], collapse = " · "), sep = "\n")
+}
 node_labels <- vapply(seq_len(nrow(dt$frame)), function(i) {
-  sprintf("%s\n%d%% · n = %d", class_names_nom[[predicted_classes[i]]],
-          round(100 * node_share[i]), node_n[i])
+  sprintf("%s (n = %d)\n%s", class_names_nom[[predicted_classes[i]]], node_n[i], count_lines(i))
 }, character(1))
 # split.fun must return one label per frame row. rpart.plot stores the label of a split on
 # the parent's *left child*, which in rpart's pre-order frame is the very next row.
@@ -244,7 +255,7 @@ draw_tree <- function() {
     yesno = 2, yes.text = "já", no.text = "nei",   # label every branch
     node.fun = my_node_fun, split.fun = my_split_fun,
     fallen.leaves = TRUE, varlen = 0, faclen = 0, roundint = FALSE,
-    cex = 0.74, box.col = box_cols, border.col = border_cols, col = iskos_text_dark,
+    cex = 0.66, box.col = box_cols, border.col = border_cols, col = iskos_text_dark,
     split.cex = 0.92, split.font = 1, split.col = iskos_text_mid,
     split.box.col = iskos_color_background, split.border.col = iskos_color_background,
     split.yshift = -1.1,                         # question just below the branch line
@@ -382,14 +393,11 @@ p_cm
 
 ## 9. Mikilvægustu breyturnar (Mynd 8.3 í bókinni)
 
-Við berum saman tvo mælikvarða á mikilvægi breyta:
-
-- **Gini-mikilvægi** (`MeanDecreaseGini`): hversu mikið skiptingar á breytunni minnka Gini-óhreinleika að meðaltali yfir trén 300. Það á til að ofmeta breytur með mörg möguleg gildi, eins og aldur, menntun og kjördæmi.
-- **Umröðunarmikilvægi** (`MeanDecreaseAccuracy`, óskalað): hversu mikið nákvæmnin lækkar (í prósentustigum) ef svörum við breytunni er stokkað af handahófi milli svarenda.
+Við mælum mikilvægi breyta með **umröðunarmikilvægi** (`MeanDecreaseAccuracy`, óskalað): hversu mikið nákvæmni slembiskógarins lækkar, í prósentustigum, ef svörum við breytunni er stokkað af handahófi milli svarenda. Aðrir mælikvarðar geta raðað breytunum öðruvísi. Gini-mikilvægi (`MeanDecreaseGini`), sem `randomForest` reiknar líka, á til dæmis til að ofmeta breytur með mörg möguleg gildi, eins og aldur, menntun og kjördæmi; það er prentað hér að neðan til samanburðar.
 
 Næsta vinnubók notar **SHAP** til að skoða einstakar spár.
 
-```{r feature-importance, fig.width=9.5, fig.height=5.2}
+```{r feature-importance, fig.width=8, fig.height=5}
 short_for_imp <- function(name) {
   idx <- match(name, meta$label)
   if (!is.na(idx)) {
@@ -407,25 +415,23 @@ imp_all <- as.data.frame(importance(rf, scale = FALSE)) |>
     perm  = 100 * MeanDecreaseAccuracy
   )
 
-top_plot <- function(col, xlab, title) {
-  d <- imp_all |> arrange(desc(.data[[col]])) |> head(10) |>
-    mutate(label = forcats::fct_reorder(label, .data[[col]]))
-  ggplot(d, aes(x = .data[[col]], y = label, fill = group)) +
-    geom_col(width = 0.72, show.legend = TRUE) +   # keep swatches for groups absent from a panel
-    scale_fill_manual(values = group_colors, limits = names(group_colors), drop = FALSE, name = NULL) +
-    guides(fill = guide_legend(nrow = 2)) +
-    labs(x = xlab, y = NULL, title = title) +
-    theme_iskos_legend(base_size = 11) +
-    theme(text = element_text(family = "Arial"), panel.grid.major.y = element_blank(),
-          axis.text.y = element_text(colour = iskos_text_dark))
-}
-p_gini <- top_plot("MeanDecreaseGini", "Meðallækkun á Gini-óhreinleika", "(a) Gini-mikilvægi")
-p_perm <- top_plot("perm", "Lækkun á nákvæmni (prósentustig)", "(b) Umröðunarmikilvægi")
-var_imp <- (p_gini | p_perm) + plot_layout(guides = "collect") &
-  theme(legend.position = "bottom", legend.text = element_text(size = 9.5))
+top <- imp_all |> arrange(desc(perm)) |> head(12) |> mutate(label = forcats::fct_reorder(label, perm))
+var_imp <- ggplot(top, aes(x = perm, y = label, fill = group)) +
+  geom_col(width = 0.72) +
+  # Legend lists only the variable groups that appear among the bars.
+  scale_fill_manual(values = group_colors, breaks = intersect(names(group_colors), as.character(top$group)),
+                    name = NULL) +
+  guides(fill = guide_legend(nrow = 2)) +
+  labs(x = "Lækkun á nákvæmni þegar svörum er stokkað (prósentustig)", y = NULL) +
+  theme_iskos_legend(base_size = 11) +
+  theme(text = element_text(family = "Arial"), panel.grid.major.y = element_blank(),
+        axis.text.y = element_text(colour = iskos_text_dark), legend.text = element_text(size = 9.5))
 
-iskos_save(var_imp, "mynd_8_3_mikilvaegi", width = 9.5, height = 5.2)
+iskos_save(var_imp, "mynd_8_3_mikilvaegi", width = 8, height = 5)
 var_imp
+
+# For comparison only (not in the book): the Gini ranking.
+imp_all |> arrange(desc(MeanDecreaseGini)) |> select(label, MeanDecreaseGini, perm) |> head(10)
 ```
 
 ## 10. Vistum líkanið

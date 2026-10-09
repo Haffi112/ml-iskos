@@ -80,11 +80,11 @@ humanize_row_for_plot <- function(row_df) {
 
 ## 1. Yfirlit yfir þær spurningar sem líkanið notar
 
-Líkanið notar eiginleika úr hópum 1, 2, 3, 6, 7 og 8 (sjáðu `feature_meta.csv`), að undanskildu mati á frammistöðu ríkisstjórnarinnar sem er sleppt í 02-vinnubókinni. Hér eru þeir allir með íslenskri lýsingu og leyfilegum gildum. Notaðu þetta sem uppflettilista þegar þú fyllir inn í `my_answers` fyrir neðan.
+Líkanið notar eiginleika úr hópum 1, 2, 3, 6, 7 og 8 (sjáðu `feature_meta.csv`). Hér eru þeir allir með íslenskri lýsingu og leyfilegum gildum. Notaðu þetta sem uppflettilista þegar þú fyllir inn í `my_answers` fyrir neðan.
 
 ```{r question-reference}
 LEAK_GROUPS    <- c("4 – Málefnaeign", "5 – Flokkshollusta og leiðtogar")
-EXCLUDE_VARS   <- c("govprfm")   # same exclusions as in 02_models
+EXCLUDE_VARS   <- character(0)   # same exclusions as in 02_models
 used_questions <- meta |>
   dplyr::filter(!(group %in% LEAK_GROUPS), !(short_name %in% EXCLUDE_VARS),
                 label %in% colnames(df)) |>
@@ -147,7 +147,8 @@ my_answers <- list(
   "Rýmka innflutning á landbúnaðarafurðum"    = 3L,
   "Afglæpavæðing neysluskammta fíkniefna"     = 2L,
   "Jafnrétti kynja gengið of langt"           = 3L,
-  # ---------- 3 – Frammistaða stjórnvalda (mat á ríkisstjórn er ekki í líkaninu) ----------
+  # ---------- 3 – Frammistaða stjórnvalda ----------
+  "Frammistaða ríkisstjórnar (VG–D–B) síðustu þrjú ár" = 3L,
   "Efnahagsástand á Íslandi síðustu 12 mánuði"= 3L,
   # ---------- 6 – Viðhorf og hegðun ----------
   "Áhugi á stjórnmálum"                       = 3L,

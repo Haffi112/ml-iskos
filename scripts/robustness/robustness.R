@@ -8,8 +8,8 @@
 #   * umröðunarmikilvægi (permutation importance) til hliðar við Gini-mikilvægi
 #
 # Keyrt úr rót verkefnisins eftir að 00_preprocess hefur búið til data/:
-#   Rscript scripts/robustness/robustness.R            # líkanið í kaflanum
-#   Rscript scripts/robustness/robustness.R with_gov   # með mati á frammistöðu ríkisstjórnar
+#   Rscript scripts/robustness/robustness.R              # líkanið í kaflanum
+#   Rscript scripts/robustness/robustness.R without_gov  # án mats á frammistöðu ríkisstjórnar
 #   Rscript scripts/robustness/robustness.R all        # allar breytur (líka málefnaeign/flokkshollusta)
 
 suppressPackageStartupMessages({
@@ -25,8 +25,8 @@ meta <- read_csv("data/feature_meta.csv", show_col_types = FALSE)
 
 # Same exclusions as 02_models.Rmd; the variants switch them off for comparison.
 LEAK_GROUPS  <- c("4 – Málefnaeign", "5 – Flokkshollusta og leiðtogar")
-EXCLUDE_VARS <- c("govprfm")
-if (VARIANT == "with_gov") EXCLUDE_VARS <- character(0)
+EXCLUDE_VARS <- character(0)
+if (VARIANT == "without_gov") EXCLUDE_VARS <- c("govprfm")
 if (VARIANT == "all") { LEAK_GROUPS <- character(0); EXCLUDE_VARS <- character(0) }
 
 leak_vars <- meta |> filter(group %in% LEAK_GROUPS | short_name %in% EXCLUDE_VARS) |> pull(label)

@@ -56,7 +56,7 @@ bprtequal,Bestur flokkur í jafnréttismálum,,4 – Málefnaeign,nominal
 bprthouse,Bestur flokkur í húsnæðismálum,,4 – Málefnaeign,nominal
 rentown,"Búseta í eigin húsnæði, leigu eða annars",Húsnæðisform,1 – Félagsleg staða,nominal
 uniwindw,Launþegi eða sjálfstæður atvinnurekandi,Launþegi eða sjálfstæður,1 – Félagsleg staða,nominal
-govpriv,Starfar hjá hinu opinbera eða einkarekstri,Opinber eða einkageiri,1 – Félagsleg staða,nominal
+govpriv,Starfar hjá hinu opinbera eða einkarekstri,Starfar hjá,1 – Félagsleg staða,nominal
 educationflo,Menntun svaranda (flokkuð),Menntun,1 – Félagsleg staða,nominal
 unmmb,Meðlimur í stéttafélagi,Stéttarfélagsaðild,1 – Félagsleg staða,ordinal
 maritals,Hjúskaparstaða,Hjúskaparstaða,1 – Félagsleg staða,nominal
