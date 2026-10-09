@@ -27,6 +27,7 @@ Kjósendakönnun/ÍSKOS kjósenda 2024/ISKOS2024_med_aukabreytum_20260318.sav
 
 Í geymslunni eru aðeins lýsigögn: flokkun breyta í breytuhópa (`iskos24_breytuflokkun.csv`) og
 breytuheiti og gildismerki (`data/feature_meta.csv`, `data/value_labels.json`).
+Orðalag allra spurninganna sem líkanið notar er í [`spurningar.md`](spurningar.md).
 
 ## Uppsetning
 
